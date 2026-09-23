@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TemperoTop — Porta-Temperos Giratório 360° com 12 Potes de Vidro</title>
+<meta name="description" content="Porta-Temperos Giratório 360° com 12 potes de vidro. Organize sua cozinha com praticidade e um design moderno. Por apenas R$ 27,90." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============ SVG DEFS (reusable product illustration + icons) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Glass gradient -->
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".85"/>
+      <stop offset=".45" stop-color="#e9e6df" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#cfc9bf" stop-opacity=".7"/>
+    </linearGradient>
+    <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3a3a"/>
+      <stop offset="1" stop-color="#141414"/>
+    </linearGradient>
+    <linearGradient id="frame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b2b2b"/>
+      <stop offset="1" stop-color="#0c0c0c"/>
+    </linearGradient>
+    <radialGradient id="shadow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#000" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- ===== Product symbol: Rotating spice rack, 12 glass jars, black lids ===== -->
+    <symbol id="spiceRack" viewBox="0 0 400 480">
+      <ellipse cx="200" cy="452" rx="150" ry="26" fill="url(#shadow)"/>
+      <!-- base plate -->
+      <rect x="96" y="404" width="208" height="40" rx="12" fill="url(#frame)"/>
+      <rect x="110" y="410" width="180" height="8" rx="4" fill="#000" opacity=".4"/>
+      <!-- central pole -->
+      <rect x="192" y="70" width="16" height="340" rx="6" fill="url(#frame)"/>
+
+      <!-- three tiers -->
+      <g>
+        <!-- tier shelves -->
+        <rect x="90" y="150" width="220" height="16" rx="8" fill="url(#frame)"/>
+        <rect x="90" y="262" width="220" height="16" rx="8" fill="url(#frame)"/>
+        <rect x="90" y="374" width="220" height="16" rx="8" fill="url(#frame)"/>
+      </g>
+
+      <!-- JARS: 3 rows x 3 jars = generous front view of the 12-jar carousel -->
+      <!-- Row 1 -->
+      <use href="#jar" x="104" y="70" style="color:#c94f1d"/>
+      <use href="#jar" x="164" y="70" style="color:#e0a51e"/>
+      <use href="#jar" x="224" y="70" style="color:#5b7d2f"/>
+      <!-- Row 2 -->
+      <use href="#jar" x="104" y="182" style="color:#8a3b12"/>
+      <use href="#jar" x="164" y="182" style="color:#b71c1c"/>
+      <use href="#jar" x="224" y="182" style="color:#6d4c2f"/>
+      <!-- Row 3 -->
+      <use href="#jar" x="104" y="294" style="color:#3f5c22"/>
+      <use href="#jar" x="164" y="294" style="color:#d98324"/>
+      <use href="#jar" x="224" y="294" style="color:#7a6a1a"/>
+    </symbol>
+
+    <!-- single jar symbol -->
+    <symbol id="jar" viewBox="0 0 72 100" width="72" height="100">
+      <!-- spice fill (clipped to glass) -->
+      <clipPath id="jarClip"><rect x="8" y="30" width="56" height="60" rx="10"/></clipPath>
+      <rect x="6" y="22" width="60" height="70" rx="12" fill="url(#glass)" stroke="#b7b1a6" stroke-width="1.5"/>
+      <rect x="8" y="55" width="56" height="35" rx="10" fill="currentColor" opacity=".9" clip-path="url(#jarClip)"/>
+      <ellipse cx="36" cy="55" rx="28" ry="6" fill="#000" opacity=".12" clip-path="url(#jarClip)"/>
+      <!-- glass highlight -->
+      <rect x="14" y="30" width="8" height="54" rx="4" fill="#fff" opacity=".45"/>
+      <!-- black lid -->
+      <rect x="10" y="8" width="52" height="20" rx="7" fill="url(#lid)"/>
+      <rect x="16" y="4" width="40" height="8" rx="4" fill="#2c2c2c"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ================= 1. HEADER ================= -->
+<header class="site-header" id="topo">
+  <div class="container header-inner">
+    <a href="#topo" class="logo">
+      <span class="logo-mark">TT</span>
+      <span class="logo-text">TemperoTop</span>
+    </a>
+    <nav class="main-nav" id="mainNav">
+      <a href="#topo">Início</a>
+      <a href="#beneficios">Benefícios</a>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <button class="cart-btn" id="cartBtn" aria-label="Abrir carrinho">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.4a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.1L22 7H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="btn btn-primary btn-buy" data-buy>Comprar Agora</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 2. HERO ================= -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <span class="eyebrow">Praticidade e Organização</span>
+      <h1>Seus temperos<br>organizados.<br><span class="accent">Sua cozinha muito<br>mais prática.</span></h1>
+      <p class="lead">Tenha seus temperos, ervas e especiarias sempre organizados e ao alcance das mãos.</p>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="3" width="10" height="5" rx="1.5"/><path d="M6 8h12v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/></svg>
+          </span>
+          <div><b>12</b><small>Potes<br>de vidro</small></div>
+        </div>
+        <div class="stat">
+          <span class="stat-icon rot">360°</span>
+          <div><b>Giro</b><small>360°</small></div>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 4v16"/></svg>
+          </span>
+          <div><b>Design</b><small>compacto</small></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg" data-buy>Quero o Meu Agora →</button>
+
+      <div class="hero-trust">
+        <span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V5z"/></svg> Compra segura</span>
+        <span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/></svg> Envio rápido</span>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="scene scene-hero scene-photo">
+        <img src="images/hero.webp" alt="Porta-Temperos Giratório 360° com 12 potes de vidro em uma cozinha moderna" class="product-photo" width="1240" height="1240" loading="eager">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. PROBLEMA ================= -->
+<section class="problem">
+  <div class="container problem-grid">
+    <div class="scene scene-solution scene-photo">
+      <img src="images/problema.webp" alt="Porta-Temperos Giratório 360° organizado na bancada da cozinha" class="product-photo" width="1536" height="1024" loading="lazy">
+    </div>
+
+    <div class="problem-text">
+      <span class="eyebrow">O Problema</span>
+      <h2>Chega de procurar<br>seus temperos</h2>
+      <p>Temperos espalhados ocupam espaço, deixam a cozinha desorganizada e dificultam encontrar o que você precisa.</p>
+      <p class="solution">Uma única solução para deixar tudo organizado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. BENEFÍCIOS ================= -->
+<section class="benefits" id="beneficios">
+  <div class="container">
+    <span class="eyebrow center">Benefícios</span>
+    <h2 class="center">Tudo o que você precisa<br>em um só lugar</h2>
+
+    <div class="benefit-grid">
+      <div class="benefit">
+        <span class="b-icon rot">360°</span>
+        <h3>Giro 360°</h3>
+        <p>Gire o suporte e encontre rapidamente o tempero que procura.</p>
+      </div>
+      <div class="benefit">
+        <span class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="3" width="10" height="5" rx="1.5"/><path d="M6 8h12v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/></svg></span>
+        <h3>12 Potes</h3>
+        <p>Tenha seus principais temperos organizados em um único lugar.</p>
+      </div>
+      <div class="benefit">
+        <span class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <h3>Vidro</h3>
+        <p>Potes transparentes para visualizar facilmente o conteúdo.</p>
+      </div>
+      <div class="benefit">
+        <span class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 4v16M4 9h5"/></svg></span>
+        <h3>Economia de espaço</h3>
+        <p>Design compacto para manter sua bancada organizada.</p>
+      </div>
+      <div class="benefit">
+        <span class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg></span>
+        <h3>Praticidade</h3>
+        <p>Mais facilidade para preparar suas refeições todos os dias.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. PRODUTO EM DESTAQUE ================= -->
+<section class="showcase">
+  <div class="container showcase-grid">
+    <div class="scene scene-showcase scene-photo">
+      <img src="images/produto.webp" alt="Mão girando o Porta-Temperos 360° para acessar os potes de vidro" class="product-photo" width="1536" height="1024" loading="lazy">
+    </div>
+    <div class="showcase-text">
+      <span class="eyebrow">Qualidade e Funcionalidade</span>
+      <h2>Organização que<br>faz diferença</h2>
+      <p>Com seu sistema giratório, você consegue acessar seus temperos de forma rápida e prática, mantendo tudo organizado e sempre à mão.</p>
+      <ul class="check-list">
+        <li>12 potes de vidro</li>
+        <li>Suporte giratório 360°</li>
+        <li>Tampas pretas</li>
+        <li>Design moderno</li>
+        <li>Ocupa pouco espaço</li>
+      </ul>
+      <button class="btn btn-primary btn-lg" data-buy>Quero Organizar Minha Cozinha →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 6. COMO FUNCIONA ================= -->
+<section class="how" id="como-funciona">
+  <div class="container">
+    <span class="eyebrow">Como Funciona</span>
+    <h2>Simples e prático</h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-thumb"><svg viewBox="0 0 72 100"><use href="#jar" style="color:#5b7d2f"/></svg></div>
+        <div class="how-body"><span class="step-num">01</span><h3>Organize</h3><p>Coloque seus temperos nos potes.</p></div>
+      </div>
+      <div class="how-step">
+        <div class="how-thumb"><svg viewBox="0 0 72 100"><use href="#jar" style="color:#d98324"/></svg><span class="mini360">360°</span></div>
+        <div class="how-body"><span class="step-num">02</span><h3>Gire</h3><p>Gire o suporte para encontrar o tempero desejado.</p></div>
+      </div>
+      <div class="how-step">
+        <div class="how-thumb"><svg viewBox="0 0 72 100"><use href="#jar" style="color:#b71c1c"/></svg></div>
+        <div class="how-body"><span class="step-num">03</span><h3>Use</h3><p>Tenha tudo sempre à mão durante o preparo das refeições.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 7. ESTILO DE VIDA ================= -->
+<section class="lifestyle" id="depoimentos">
+  <div class="container lifestyle-grid">
+    <div class="lifestyle-text">
+      <span class="eyebrow">Estilo de Vida</span>
+      <h2>Mais organização<br>para sua cozinha</h2>
+      <p>Um produto compacto, bonito e funcional para deixar seu dia a dia muito mais prático.</p>
+    </div>
+    <div class="scene scene-lifestyle scene-photo">
+      <img src="images/estilo-vida.webp" alt="Porta-Temperos Giratório 360° em uma cozinha moderna e organizada" class="product-photo" width="1536" height="1024" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ================= 8. OFERTA ================= -->
+<section class="offer">
+  <div class="container offer-grid">
+    <div class="scene scene-offer scene-photo">
+      <img src="images/hero.webp" alt="Porta-Temperos Giratório 360° com 12 potes de vidro" class="product-photo" width="1240" height="1240" loading="lazy">
+    </div>
+    <div class="offer-main">
+      <span class="eyebrow light">Oferta Especial</span>
+      <h2>Leve mais organização<br>para sua cozinha</h2>
+      <p class="por">Por apenas</p>
+      <div class="price">R$ 27,90</div>
+      <p class="freight"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/></svg> Frete grátis com cupom</p>
+      <button class="btn btn-primary btn-lg" data-buy>Comprar Agora →</button>
+    </div>
+    <div class="offer-benefits">
+      <div class="ob"><span class="ob-ic">✓</span><p>Mais praticidade<br>no seu dia a dia</p></div>
+      <div class="ob"><span class="ob-ic">✓</span><p>Temperos sempre<br>à mão</p></div>
+      <div class="ob"><span class="ob-ic">✓</span><p>Design moderno<br>e elegante</p></div>
+      <div class="ob"><span class="ob-ic">✓</span><p>Ideal para sua<br>cozinha</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 9. FAQ ================= -->
+<section class="faq" id="faq">
+  <div class="container">
+    <span class="eyebrow">Dúvidas Frequentes</span>
+    <h2>Perguntas e respostas</h2>
+    <div class="faq-cols">
+      <div class="faq-col">
+        <div class="faq-item"><button class="faq-q">Quantos potes acompanham o produto?<span>+</span></button><div class="faq-a"><p>O produto acompanha 12 potes de vidro.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Os potes são de vidro?<span>+</span></button><div class="faq-a"><p>Sim, os 12 potes são de vidro, permitindo visualizar facilmente o conteúdo.</p></div></div>
+        <div class="faq-item"><button class="faq-q">O suporte gira?<span>+</span></button><div class="faq-a"><p>Sim, o suporte é giratório 360°, facilitando o acesso a qualquer tempero.</p></div></div>
+      </div>
+      <div class="faq-col">
+        <div class="faq-item"><button class="faq-q">Qual o tamanho do produto?<span>+</span></button><div class="faq-a"><p>É um produto compacto, com design pensado para ocupar pouco espaço na bancada.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Posso colocar diferentes tipos de temperos?<span>+</span></button><div class="faq-a"><p>Sim, os potes são ideais para temperos, ervas e especiarias variados.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Como funciona a entrega?<span>+</span></button><div class="faq-a"><p>Após a confirmação da compra, o envio é feito para o endereço informado no cadastro.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 10. CTA FINAL ================= -->
+<section class="final-cta">
+  <div class="container final-grid">
+    <div class="scene scene-final scene-photo">
+      <img src="images/cta-final.webp" alt="Pote de vidro do Porta-Temperos com tampa preta em close" class="product-photo" width="1240" height="1240" loading="lazy">
+    </div>
+    <div class="final-text">
+      <h2>Deixe seus temperos organizados<br>de uma vez por todas.</h2>
+      <p>Praticidade, organização e um design moderno para sua cozinha.</p>
+    </div>
+    <button class="btn btn-primary btn-lg" data-buy>Quero Meu Porta-Temperos →</button>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <span class="logo"><span class="logo-mark">TT</span><span class="logo-text">TemperoTop</span></span>
+    <p>© 2026 TemperoTop — Porta-Temperos Giratório 360°. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<!-- ================= MOBILE STICKY CTA ================= -->
+<div class="sticky-cta">
+  <div class="sticky-price"><small>Porta-Temperos 360°</small><b>R$ 27,90</b></div>
+  <button class="btn btn-primary" data-buy>Comprar Agora</button>
+</div>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+  <div class="cart-head"><h3>Seu Carrinho</h3><button class="close" id="cartClose" aria-label="Fechar">×</button></div>
+  <div class="cart-body" id="cartBody"><p class="cart-empty">Seu carrinho está vazio.</p></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span><b id="cartTotal">R$ 0,00</b></div>
+    <button class="btn btn-primary btn-block" id="checkoutBtn" disabled>Finalizar Compra</button>
+  </div>
+</aside>
+
+<!-- ================= CHECKOUT MODAL ================= -->
+<div class="modal" id="checkoutModal" aria-hidden="true">
+  <div class="modal-box">
+    <button class="close" id="checkoutClose" aria-label="Fechar">×</button>
+    <div class="modal-head">
+      <h3>Finalizar Compra</h3>
+      <p>Preencha seus dados para o envio. Pagamento seguro via <b>Mercado Pago</b>.</p>
+    </div>
+    <div class="modal-summary">
+      <svg viewBox="0 0 400 480" class="mini-product"><use href="#spiceRack"/></svg>
+      <div><b>Porta-Temperos Giratório 360°</b><small>12 potes de vidro · Frete grátis com cupom</small></div>
+      <span class="modal-price">R$ 27,90</span>
+    </div>
+    <form id="checkoutForm" novalidate>
+      <div class="grid-2">
+        <label>Nome completo<input name="nome" required autocomplete="name"></label>
+        <label>CPF<input name="cpf" required inputmode="numeric" placeholder="000.000.000-00"></label>
+      </div>
+      <div class="grid-2">
+        <label>Telefone / WhatsApp<input name="telefone" required inputmode="tel" placeholder="(00) 00000-0000"></label>
+        <label>E-mail<input name="email" type="email" required autocomplete="email"></label>
+      </div>
+      <div class="grid-3">
+        <label>CEP
+          <input name="cep" required inputmode="numeric" maxlength="9" placeholder="00000-000" autocomplete="postal-code">
+          <span class="field-hint" id="cepHint" role="status" aria-live="polite"></span>
+        </label>
+        <label class="col-span-2">Rua / Logradouro<input name="endereco" required autocomplete="address-line1" readonly></label>
+      </div>
+      <div class="grid-3">
+        <label>Número<input name="numero" id="numeroInput" required inputmode="numeric" autocomplete="address-line2"></label>
+        <label class="col-span-2">Complemento<input name="complemento" placeholder="(opcional)" autocomplete="address-line3"></label>
+      </div>
+      <div class="grid-3">
+        <label>Bairro<input name="bairro" required readonly></label>
+        <label>Cidade<input name="cidade" required readonly></label>
+        <label>Estado
+          <select name="estado" required disabled>
+            <option value="">UF</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option><option>SE</option><option>TO</option>
+          </select>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="payBtn">Continuar para o Pagamento →</button>
+      <p class="secure-note"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Ambiente seguro. Seus dados são usados apenas para o envio.</p>
+    </form>
+
+    <!-- ETAPA 2: pagamento dentro da própria página (Mercado Pago Bricks) -->
+    <div id="paymentStep" hidden>
+      <button type="button" class="link-back" id="backToForm">← Voltar aos dados</button>
+      <div class="pay-head">
+        <span>Pagamento</span>
+        <b id="payAmount">R$ 27,90</b>
+      </div>
+      <div id="brickContainer"></div>
+      <div id="payLoading" class="pay-loading">Carregando formas de pagamento…</div>
+      <div id="payResult" class="pay-result" hidden></div>
+      <p class="secure-note"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Pagamento processado com segurança pelo Mercado Pago, sem sair do site.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script src="script.js"></script>
+</body>
+</html>

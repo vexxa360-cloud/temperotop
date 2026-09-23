@@ -1,0 +1,25 @@
+# Deploy do TemperoTop na Render (https://render.com)
+# Publica o backend (que também serve a landing page) com HTTPS e URL pública.
+services:
+  - type: web
+    name: temperotop
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    # Disco persistente para guardar os pedidos (data/orders.json).
+    # No plano free o disco é limitado; para muito volume, troque por um banco.
+    disk:
+      name: temperotop-data
+      mountPath: /opt/render/project/src/backend/data
+      sizeGB: 1
+    envVars:
+      - key: MP_PUBLIC_KEY
+        sync: false      # defina no painel da Render
+      - key: MP_ACCESS_TOKEN
+        sync: false      # defina no painel da Render (secreto)
+      - key: ADMIN_TOKEN
+        sync: false      # defina no painel da Render
+      - key: BASE_URL
+        sync: false      # ex.: https://temperotop.onrender.com
