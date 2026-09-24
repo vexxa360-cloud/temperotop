@@ -407,27 +407,23 @@ app.post('/admin/orders/:id/payment', adminAuth, (req, res) => {
 /* ---- Produto / Fornecedor ---- */
 app.get('/admin/produtos', adminAuth, (req, res) => {
   const products = store.listProducts();
-  const forms = products.map(p => `
+  const forms = products.map(p => {
+    const variantRows = (p.variants || []).map(v => `
+      <tr>
+        <td><b>${v.frascos} frascos</b></td>
+        <td><input name="preco_${v.id}" value="${v.precoVenda}" style="max-width:120px"></td>
+        <td><input name="custo_${v.id}" value="${v.custoFornecedor}" style="max-width:120px"></td>
+        <td><b>${brl(store.margemVariante(p, v))}</b></td>
+      </tr>`).join('');
+    return `
     <div class="card" style="margin-bottom:16px">
       <h3 style="margin:0 0 10px">${esc(p.nome)} <span class="sub" style="font-weight:400">(SKU ${esc(p.sku)})</span></h3>
-      <div class="money">
-        <div><small>Preço de venda</small><b>${brl(p.precoVenda)}</b></div>
-        <div><small>Custo fornecedor</small><b>${brl(p.custoFornecedor)}</b></div>
-        <div><small>Outros custos</small><b>${brl(p.outrosCustos)}</b></div>
-        <div><small>Margem estimada</small><b>${brl(store.margemEstimada(p))}</b></div>
-      </div>
       <form method="post" action="/admin/produtos/${encodeURIComponent(p.sku)}">${tk(req)}
+        <table style="max-width:560px;margin-bottom:12px"><thead><tr><th>Opção</th><th>Preço de venda (R$)</th><th>Custo fornecedor (R$)</th><th>Margem estimada</th></tr></thead>
+        <tbody>${variantRows}</tbody></table>
         <div class="row2">
           <div><label>Nome</label><input name="nome" value="${esc(p.nome)}"></div>
-          <div><label>Variação</label><input name="variacao" value="${esc(p.variacao)}"></div>
-        </div>
-        <div class="row2">
-          <div><label>Preço de venda (R$)</label><input name="precoVenda" value="${p.precoVenda}"></div>
-          <div><label>Custo do fornecedor (R$)</label><input name="custoFornecedor" value="${p.custoFornecedor}"></div>
-        </div>
-        <div class="row2">
-          <div><label>Outros custos (R$)</label><input name="outrosCustos" value="${p.outrosCustos}"></div>
-          <div><label>Quantidade (estoque)</label><input name="quantidade" value="${p.quantidade}"></div>
+          <div><label>Outros custos por pedido (R$)</label><input name="outrosCustos" value="${p.outrosCustos}"></div>
         </div>
         <div class="row2">
           <div><label>Fornecedor</label><input name="fornecedor" value="${esc(p.fornecedor)}"></div>
@@ -437,10 +433,11 @@ app.get('/admin/produtos', adminAuth, (req, res) => {
         <input name="linkFornecedor" value="${esc(p.linkFornecedor)}" placeholder="https://...">
         <br><button class="btn" type="submit" style="margin-top:12px">Salvar produto</button>
       </form>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   res.send(page('Produto / Fornecedor — TemperoTop', `
     <div class="top"><h1>Produto / Fornecedor</h1></div>${tabs(req,'produtos')}
-    <p class="sub">Custo, link e margem são <b>internos</b> — o cliente nunca vê. A margem estimada é calculada automaticamente (preço − custo − outros custos).</p>
+    <p class="sub">Preço por opção de frascos (6/8/12). Custo, link e margem são <b>internos</b> — o cliente nunca vê. A margem é calculada por opção (preço − custo − outros custos).</p>
     ${forms}`));
 });
 app.post('/admin/produtos/:sku', adminAuth, (req, res) => {

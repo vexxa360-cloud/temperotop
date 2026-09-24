@@ -271,8 +271,13 @@
     <div class="offer-main">
       <span class="eyebrow light">Oferta Especial</span>
       <h2>Leve mais organização<br>para sua cozinha</h2>
-      <p class="por">Por apenas</p>
-      <div class="price">R$ 27,90</div>
+      <p class="por">Escolha a quantidade de frascos:</p>
+      <div class="variant-picker">
+        <button type="button" class="variant-opt" data-variant="6"><span class="v-qtd">6 frascos</span><span class="v-price">R$ 59,90</span></button>
+        <button type="button" class="variant-opt" data-variant="8"><span class="v-qtd">8 frascos</span><span class="v-price">R$ 69,90</span></button>
+        <button type="button" class="variant-opt" data-variant="12"><span class="v-badge">Mais vendido</span><span class="v-qtd">12 frascos</span><span class="v-price">R$ 99,90</span></button>
+      </div>
+      <div class="price" data-price>R$ 59,90</div>
       <p class="freight"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/></svg> Frete grátis com cupom</p>
       <button class="btn btn-primary btn-lg" data-buy>Comprar Agora →</button>
     </div>
@@ -292,7 +297,7 @@
     <h2>Perguntas e respostas</h2>
     <div class="faq-cols">
       <div class="faq-col">
-        <div class="faq-item"><button class="faq-q">Quantos potes acompanham o produto?<span>+</span></button><div class="faq-a"><p>O produto acompanha 12 potes de vidro.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Quantos frascos acompanham o produto?<span>+</span></button><div class="faq-a"><p>Você escolhe no momento da compra: 6 frascos (R$ 59,90), 8 frascos (R$ 69,90) ou 12 frascos (R$ 99,90). Todos são de vidro.</p></div></div>
         <div class="faq-item"><button class="faq-q">Os potes são de vidro?<span>+</span></button><div class="faq-a"><p>Sim, os 12 potes são de vidro, permitindo visualizar facilmente o conteúdo.</p></div></div>
         <div class="faq-item"><button class="faq-q">O suporte gira?<span>+</span></button><div class="faq-a"><p>Sim, o suporte é giratório 360°, facilitando o acesso a qualquer tempero.</p></div></div>
       </div>
@@ -328,7 +333,7 @@
 
 <!-- ================= MOBILE STICKY CTA ================= -->
 <div class="sticky-cta">
-  <div class="sticky-price"><small>Porta-Temperos 360°</small><b>R$ 27,90</b></div>
+  <div class="sticky-price"><small>Porta-Temperos 360°</small><b data-price>R$ 59,90</b></div>
   <button class="btn btn-primary" data-buy>Comprar Agora</button>
 </div>
 
@@ -353,8 +358,13 @@
     </div>
     <div class="modal-summary">
       <svg viewBox="0 0 400 480" class="mini-product"><use href="#spiceRack"/></svg>
-      <div><b>Porta-Temperos Giratório 360°</b><small>12 potes de vidro · Frete grátis com cupom</small></div>
-      <span class="modal-price">R$ 27,90</span>
+      <div><b>Porta-Temperos Giratório 360°</b><small data-desc>6 frascos de vidro · Frete grátis com cupom</small></div>
+      <span class="modal-price" data-price>R$ 59,90</span>
+    </div>
+    <div class="variant-picker variant-picker-modal">
+      <button type="button" class="variant-opt" data-variant="6"><span class="v-qtd">6 frascos</span><span class="v-price">R$ 59,90</span></button>
+      <button type="button" class="variant-opt" data-variant="8"><span class="v-qtd">8 frascos</span><span class="v-price">R$ 69,90</span></button>
+      <button type="button" class="variant-opt" data-variant="12"><span class="v-badge">Mais vendido</span><span class="v-qtd">12 frascos</span><span class="v-price">R$ 99,90</span></button>
     </div>
     <form id="checkoutForm" novalidate>
       <div class="grid-2">

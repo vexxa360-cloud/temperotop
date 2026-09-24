@@ -154,7 +154,17 @@ h1,h2,h3{line-height:1.1;letter-spacing:-.02em}
 .scene-offer{background:linear-gradient(180deg,#2a2118,#191510);aspect-ratio:1/1;box-shadow:0 30px 60px -30px #000}
 .offer-main .eyebrow{color:var(--orange)}
 .offer-main h2{font-size:clamp(24px,3vw,34px);font-weight:800;margin:4px 0 20px}
-.por{color:#b6ac9c;font-size:15px;margin-bottom:2px}
+.por{color:#b6ac9c;font-size:15px;margin-bottom:10px}
+/* seletor de frascos (variantes) */
+.variant-picker{display:flex;gap:10px;margin:0 0 16px;flex-wrap:wrap}
+.variant-picker-modal{margin:16px 0 4px}
+.variant-opt{position:relative;flex:1;min-width:92px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:13px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;transition:.15s}
+.variant-opt:hover{border-color:var(--orange)}
+.variant-opt.active{border-color:var(--orange);background:var(--orange-soft);box-shadow:0 6px 16px -10px rgba(234,154,46,.8)}
+.variant-opt .v-qtd{font-weight:800;font-size:14px;color:var(--ink)}
+.variant-opt .v-price{font-size:13px;color:var(--muted);font-weight:700}
+.variant-opt.active .v-price{color:var(--orange-d)}
+.variant-opt .v-badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
 .price{font-size:52px;font-weight:900;color:var(--orange);letter-spacing:-.03em;line-height:1;margin-bottom:14px}
 .freight{display:flex;align-items:center;gap:8px;color:#d9cfbe;font-size:14px;margin-bottom:24px}
 .freight svg{color:var(--orange)}

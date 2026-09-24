@@ -124,26 +124,37 @@ function defaultProduct() {
     sku: 'PT360-12',
     cartId: 'porta-temperos-360',
     nome: 'Porta-Temperos Giratório 360°',
-    precoVenda: 27.90,
-    custoFornecedor: 0,      // admin preenche
-    outrosCustos: 0,         // frete de compra, taxas, etc.
+    // opções de quantidade de frascos escolhidas na compra
+    variants: [
+      { id: '6',  frascos: 6,  precoVenda: 59.90, custoFornecedor: 0 },
+      { id: '8',  frascos: 8,  precoVenda: 69.90, custoFornecedor: 0 },
+      { id: '12', frascos: 12, precoVenda: 99.90, custoFornecedor: 0 }
+    ],
+    outrosCustos: 0,         // frete de compra, taxas, etc. (por pedido)
     fornecedor: '',
     linkFornecedor: '',      // ADMIN-ONLY — nunca vai ao cliente
-    variacao: 'Preto / 12 potes de vidro',
-    quantidade: 0,           // estoque (informativo)
     statusFornecedor: 'ativo'
   };
 }
-const margemEstimada = p => Number((num(p.precoVenda) - num(p.custoFornecedor) - num(p.outrosCustos)).toFixed(2));
 const listProducts = () => readProducts().products;
 const getProduct = sku => readProducts().products.find(p => p.sku === sku) || null;
 const getProductByCartId = cartId => readProducts().products.find(p => p.cartId === cartId) || readProducts().products[0] || null;
+function getVariant(product, variantId) {
+  const vs = product?.variants || [];
+  return vs.find(v => v.id === String(variantId)) || vs[0] || { id: '6', frascos: 6, precoVenda: 0, custoFornecedor: 0 };
+}
+const margemVariante = (p, v) => Number((num(v.precoVenda) - num(v.custoFornecedor) - num(p.outrosCustos)).toFixed(2));
 function updateProduct(sku, patch) {
   const db = readProducts();
   const p = db.products.find(x => x.sku === sku);
   if (!p) return null;
-  ['nome', 'fornecedor', 'linkFornecedor', 'variacao', 'statusFornecedor'].forEach(k => { if (patch[k] !== undefined) p[k] = patch[k]; });
-  ['precoVenda', 'custoFornecedor', 'outrosCustos', 'quantidade'].forEach(k => { if (patch[k] !== undefined) p[k] = num(patch[k]); });
+  ['nome', 'fornecedor', 'linkFornecedor', 'statusFornecedor'].forEach(k => { if (patch[k] !== undefined) p[k] = patch[k]; });
+  if (patch.outrosCustos !== undefined) p.outrosCustos = num(patch.outrosCustos);
+  // preços e custos por variante: campos preco_<id> e custo_<id>
+  (p.variants || []).forEach(v => {
+    if (patch['preco_' + v.id] !== undefined) v.precoVenda = num(patch['preco_' + v.id]);
+    if (patch['custo_' + v.id] !== undefined) v.custoFornecedor = num(patch['custo_' + v.id]);
+  });
   writeProducts(db);
   return p;
 }
@@ -185,19 +196,22 @@ function createOrder({ payer, shipping, items }) {
   const db = readOrders();
   db.seq += 1;
   const number = String(db.seq).padStart(6, '0');
-  const total = items.reduce((s, i) => s + num(i.unit_price) * (Number(i.quantity) || 1), 0);
   const prod = getProductByCartId(items[0]?.id) || defaultProduct();
+  // PREÇO definido pelo SERVIDOR a partir da variante escolhida (nunca confia no navegador)
+  const variant = getVariant(prod, items[0]?.variantId);
+  const qty = Number(items[0]?.quantity) || 1;
+  const total = Number((num(variant.precoVenda) * qty).toFixed(2));
   const t = stamp();
 
   const order = {
     id: number, ref: `PEDIDO #${number}`, createdAt: t.iso,
-    productSku: prod.sku,
+    productSku: prod.sku, variantId: variant.id, frascos: variant.frascos,
     customer: {
       nome: payer.name || '', email: payer.email || '',
       telefone: payer.phone || '', cpf: payer.identification?.number || ''
     },
     shipping,
-    items: items.map(i => ({ title: i.title, quantity: Number(i.quantity) || 1, unit_price: num(i.unit_price), variacao: prod.variacao })),
+    items: [{ title: prod.nome, quantity: qty, unit_price: num(variant.precoVenda), variacao: `${variant.frascos} frascos de vidro` }],
     total,
     payment: { provider: 'mercadopago', preferenceId: null, status: 'pendente', confirmation: null },
     fulfillment: null,          // definido após aprovação do pagamento
@@ -245,7 +259,8 @@ function setPaymentFromProvider(id, mpStatus, meta = {}) {
   /* Ao APROVAR: registra data/hora, calcula custo + margem e entra na fila de compra */
   if (status === 'aprovado' && !o.fulfillment) {
     const prod = getProduct(o.productSku) || defaultProduct();
-    o.costs.custoFornecedor = num(prod.custoFornecedor);
+    const v = getVariant(prod, o.variantId);
+    o.costs.custoFornecedor = num(v.custoFornecedor);
     o.costs.outrosCustos = num(prod.outrosCustos);
     o.costs.valorPago = num(o.total);
     o.costs.margemEstimada = Number((o.costs.valorPago - o.costs.custoFornecedor - o.costs.outrosCustos).toFixed(2));
@@ -276,7 +291,8 @@ function overridePayment(id, status, { motivo, responsavel }) {
   addLog(o, { field: 'pagamento', from, to: PAYMENT[status], user: responsavel.trim(), origin: 'MANUAL', reason: motivo.trim() });
   if (status === 'aprovado' && !o.fulfillment) {
     const prod = getProduct(o.productSku) || defaultProduct();
-    o.costs.custoFornecedor = num(prod.custoFornecedor);
+    const v = getVariant(prod, o.variantId);
+    o.costs.custoFornecedor = num(v.custoFornecedor);
     o.costs.outrosCustos = num(prod.outrosCustos);
     o.costs.margemEstimada = Number((o.costs.valorPago - o.costs.custoFornecedor - o.costs.outrosCustos).toFixed(2));
     o.costs.aprovadoEm = t.iso;
@@ -408,7 +424,7 @@ function clientView(o) {
 
 module.exports = {
   PAYMENT, FULFILLMENT, SHIPPING, FLOW_STAGES, ACTIONS,
-  stageIndex, nextStep, paymentBlocked, margemEstimada,
+  stageIndex, nextStep, paymentBlocked, margemVariante, getVariant,
   lookupCep, buildShipping,
   listProducts, getProduct, updateProduct,
   createOrder, updateOrder, getOrder, listOrders,

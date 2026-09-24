@@ -1,10 +1,19 @@
 /* ================= CONFIG ================= */
-const PRODUCT = {
-  id: 'porta-temperos-360',
-  title: 'Porta-Temperos Giratório 360°',
-  desc: '12 potes de vidro · Frete grátis com cupom',
-  price: 27.90
-};
+const PRODUCT_TITLE = 'Porta-Temperos Giratório 360°';
+// Opções de quantidade de frascos escolhidas no momento da compra
+const VARIANTS = [
+  { id: '6',  frascos: 6,  price: 59.90, best: false },
+  { id: '8',  frascos: 8,  price: 69.90, best: false },
+  { id: '12', frascos: 12, price: 99.90, best: true  }
+];
+let selectedVariantId = '6';
+const getVariant = () => VARIANTS.find(v => v.id === selectedVariantId) || VARIANTS[0];
+const variantDesc = v => `${v.frascos} frascos de vidro · Frete grátis com cupom`;
+function variantData(v){
+  return { id: 'porta-temperos-360-' + v.id, variantId: v.id, title: PRODUCT_TITLE,
+    desc: variantDesc(v), frascos: v.frascos, price: v.price };
+}
+
 // Endpoints do backend (ver /backend)
 const API = {
   config: '/api/config',
@@ -63,10 +72,29 @@ $('#cartClose').addEventListener('click', closeCart);
 overlay.addEventListener('click', () => { closeCart(); closeModal(); });
 
 function addToCart(){
-  const line = cart.find(i => i.id === PRODUCT.id);
-  if (line) line.qty++;
-  else cart.push({ ...PRODUCT, qty: 1 });
+  const v = variantData(getVariant());
+  const existing = cart[0];
+  if (existing && existing.variantId === v.variantId) existing.qty++;
+  else cart = [{ ...v, qty: 1 }];   // produto único: troca a variante selecionada
   renderCart();
+}
+
+/* Seleciona a variante (frascos) e sincroniza carrinho + preços em toda a página */
+function selectVariant(id){
+  if (!VARIANTS.some(v => v.id === id)) return;
+  selectedVariantId = id;
+  if (cart.length){
+    const v = variantData(getVariant());
+    cart = [{ ...v, qty: cart[0].qty || 1 }];
+  }
+  updateVariantUI();
+  renderCart();
+}
+function updateVariantUI(){
+  const v = getVariant();
+  document.querySelectorAll('.variant-opt').forEach(el => el.classList.toggle('active', el.dataset.variant === selectedVariantId));
+  document.querySelectorAll('[data-price]').forEach(el => el.textContent = BRL(v.price));
+  document.querySelectorAll('[data-desc]').forEach(el => el.textContent = variantDesc(v));
 }
 
 function renderCart(){
@@ -112,8 +140,13 @@ function renderCart(){
   });
 }
 
+/* Variant selectors (frascos) — pílulas na Oferta e no checkout */
+$$('.variant-opt').forEach(el => el.addEventListener('click', () => selectVariant(el.dataset.variant)));
+
 /* All "buy" buttons: add + open cart */
 $$('[data-buy]').forEach(b => b.addEventListener('click', () => {
+  const pick = b.getAttribute('data-variant');
+  if (pick) selectVariant(pick);
   addToCart();
   openCart();
 }));
@@ -132,6 +165,7 @@ function resetCheckoutSteps(){
   const f = document.getElementById('checkoutForm');
   if (step) step.hidden = true;
   if (f) f.hidden = false;
+  const vp = document.querySelector('.variant-picker-modal'); if (vp) vp.hidden = false;
   const brickBox = document.getElementById('brickContainer');
   if (brickBox) brickBox.innerHTML = '';
   if (brickController) { try { brickController.unmount(); } catch {} brickController = null; }
@@ -263,7 +297,7 @@ form.addEventListener('submit', async e => {
   const restore = () => { btn.disabled = false; btn.textContent = original; };
 
   const payload = {
-    items: cart.map(i => ({ id: i.id, title: i.title, description: i.desc, quantity: i.qty, unit_price: i.price })),
+    items: cart.map(i => ({ id: i.id, variantId: i.variantId, frascos: i.frascos, title: i.title, description: i.desc, quantity: i.qty, unit_price: i.price })),
     payer: { name: val('nome'), email: val('email'), phone: val('telefone'), identification: { type: 'CPF', number: val('cpf') } },
     shipping: {
       cep: val('cep'), endereco: val('endereco'), numero: val('numero'), complemento: val('complemento'),
@@ -301,6 +335,7 @@ form.addEventListener('submit', async e => {
 /* Abre a etapa 2 (pagamento) e renderiza o Payment Brick sem trocar de página */
 async function goToPayment(){
   form.hidden = true;
+  const vp = $('.variant-picker-modal'); if (vp) vp.hidden = true;  // trava a variante durante o pagamento
   const step = $('#paymentStep');
   step.hidden = false;
   $('#payAmount').textContent = BRL(currentOrder.amount);
@@ -313,6 +348,7 @@ $('#backToForm').addEventListener('click', async () => {
   if (brickController) { try { await brickController.unmount(); } catch {} brickController = null; }
   $('#brickContainer').innerHTML = '';
   $('#paymentStep').hidden = true;
+  const vp = $('.variant-picker-modal'); if (vp) vp.hidden = false;
   form.hidden = false;
 });
 
@@ -395,4 +431,5 @@ function showPaymentOutcome(data){
 }
 
 /* ================= INIT ================= */
+updateVariantUI();
 renderCart();
