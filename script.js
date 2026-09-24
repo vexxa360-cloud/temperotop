@@ -305,25 +305,26 @@ form.addEventListener('submit', async e => {
     }
   };
 
+  const UNAVAILABLE = 'Não foi possível iniciar o pagamento agora. Tente novamente em instantes.';
   let res;
   try {
     res = await fetch(API.createOrder, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
   } catch {
     restore();
-    setHint('Servidor de pagamento não está ativo. Rode a pasta "backend" (npm start) e acesse pelo endereço do servidor.', 'error');
+    setHint(UNAVAILABLE, 'error');
     return;
   }
   const ct = res.headers.get('content-type') || '';
   if (!ct.includes('application/json')) {
     restore();
-    setHint('Servidor de pagamento não encontrado. Rode o backend e acesse o site por ele (ex.: http://localhost:3000).', 'error');
+    setHint(UNAVAILABLE, 'error');
     return;
   }
   const out = await res.json().catch(() => ({}));
   if (!res.ok) { restore(); setHint(out.error || 'Não foi possível concluir. Verifique os dados.', 'error'); return; }
   if (!out.payment_enabled) {
     restore();
-    setHint(`Pedido ${out.ref || ''} registrado. Falta configurar o Mercado Pago (backend/.env) para ativar o pagamento no site.`, 'error');
+    setHint(UNAVAILABLE, 'error');
     return;
   }
 
