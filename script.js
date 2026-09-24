@@ -110,7 +110,7 @@ function renderCart(){
   }
   body.innerHTML = cart.map(i => `
     <div class="cart-line" data-id="${i.id}">
-      <div class="thumb"><svg viewBox="0 0 400 480"><use href="#spiceRack"/></svg></div>
+      <div class="thumb"><img src="images/hero.webp" alt="Porta-Temperos Giratório 360°"></div>
       <div class="ci-info">
         <b>${i.title}</b>
         <small>${i.desc}</small>
