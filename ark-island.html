@@ -1,0 +1,396 @@
+<!--
+  ARK ISLAND — bloco de página (cole no elemento "Incorporar HTML" / HTML iframe do Wix,
+  ou em qualquer página HTML). Tudo é isolado sob a classe .ark (não afeta o resto do site).
+  Identidade: Montserrat, verde-floresta #122a13, creme #f6f4e9, branco/preto (Greenfinity Universe).
+  Troque o href do botão "Conheça o GFT" (id ark-gft-link) pela URL oficial do token.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+.ark{
+  --g-900:#0b1a0c; --g-800:#122a13; --g-600:#2f5d34; --g-400:#6fa56b;
+  --cream:#f6f4e9; --cream-2:#ece9d8; --ink:#0d0d0d; --muted:#5f6360; --line:#dcd9c8;
+  --maxw:1180px; --radius:18px;
+  font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--ink); background:#fff; line-height:1.7; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.ark *,.ark *::before,.ark *::after{box-sizing:border-box;margin:0;padding:0}
+.ark img{display:block;max-width:100%;width:100%;height:100%;object-fit:cover}
+.ark a{text-decoration:none;color:inherit}
+.ark h1,.ark h2,.ark h3{line-height:1.12;letter-spacing:-.02em;font-weight:700}
+.ark .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.ark section{padding:clamp(56px,9vw,112px) 0}
+.ark .eyebrow{display:block;font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--g-600);margin-bottom:16px}
+.ark .on-dark .eyebrow,.ark .hero .eyebrow{color:var(--g-400)}
+.ark h2{font-size:clamp(28px,4.2vw,46px);margin-bottom:20px}
+.ark .lead{font-size:clamp(16px,1.6vw,19px);color:var(--muted);max-width:62ch}
+.ark p+p{margin-top:16px}
+.ark .center{text-align:center}.ark .center .lead{margin-left:auto;margin-right:auto}
+
+/* botões */
+.ark .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 13px/1 'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:17px 28px;border-radius:999px;border:2px solid transparent;cursor:pointer;transition:.25s}
+.ark .btn-solid{background:var(--cream);color:var(--g-800)}
+.ark .btn-solid:hover{background:#fff;transform:translateY(-2px)}
+.ark .btn-green{background:var(--g-800);color:#fff}
+.ark .btn-green:hover{background:var(--g-600);transform:translateY(-2px)}
+.ark .btn-ghost{border-color:rgba(255,255,255,.55);color:#fff}
+.ark .btn-ghost:hover{background:#fff;color:var(--g-800)}
+.ark .btns{display:flex;flex-wrap:wrap;gap:12px}
+
+/* HERO — imagem em tela cheia, texto ancorado embaixo */
+.ark .hero{position:relative;min-height:min(92vh,820px);display:flex;align-items:flex-end;color:#fff;padding:0;background:var(--g-900)}
+.ark .hero>img{position:absolute;inset:0}
+.ark .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,26,12,.25) 0%,rgba(11,26,12,.55) 55%,rgba(11,26,12,.92) 100%)}
+.ark .hero .wrap{width:100%;position:relative;z-index:2;padding-top:140px;padding-bottom:clamp(40px,7vw,88px)}
+.ark .hero .brand{font-size:clamp(46px,10vw,128px);font-weight:800;letter-spacing:-.04em;line-height:.95;margin-bottom:24px}
+.ark .hero .tag{font-size:clamp(18px,2.4vw,28px);font-weight:500;max-width:30ch;margin-bottom:18px}
+.ark .hero .sub{font-size:clamp(15px,1.5vw,18px);font-weight:300;max-width:56ch;opacity:.92;margin-bottom:32px}
+
+/* INTRO — texto à esquerda, imagem vertical à direita */
+.ark .split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,6vw,80px);align-items:center}
+.ark .split.rev{grid-template-columns:.95fr 1.05fr}
+.ark .split.rev .media{order:-1}
+.ark .media{border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;box-shadow:0 30px 60px -30px rgba(18,42,19,.45)}
+.ark .media.wide{aspect-ratio:4/3}
+
+/* VISÃO */
+.ark .vision{background:var(--cream)}
+.ark .vision .quote{font-size:clamp(20px,2.4vw,28px);font-weight:600;color:var(--g-800);margin-bottom:24px;line-height:1.35}
+
+/* PILARES */
+.ark .pillars{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:48px}
+.ark .pillar{grid-column:span 2;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px;transition:.3s}
+.ark .pillar:hover{transform:translateY(-6px);box-shadow:0 24px 48px -28px rgba(18,42,19,.5);border-color:var(--g-400)}
+.ark .pillar:nth-child(4),.ark .pillar:nth-child(5){grid-column:span 3}
+.ark .pillar .n{font-size:13px;font-weight:700;letter-spacing:.18em;color:var(--g-400);display:block;margin-bottom:14px}
+.ark .pillar h3{font-size:19px;margin-bottom:10px;color:var(--g-800)}
+.ark .pillar p{font-size:15px;color:var(--muted)}
+
+/* EXPERIÊNCIA — mosaico de imagens */
+.ark .experience{background:var(--g-800);color:#fff}
+.ark .experience .lead{color:rgba(255,255,255,.78)}
+.ark .mosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:230px 230px;gap:14px;margin:48px 0 40px}
+.ark .mosaic div{border-radius:14px;overflow:hidden}
+.ark .mosaic div:nth-child(1){grid-column:span 2;grid-row:span 2}
+.ark .mosaic div:nth-child(4){grid-column:span 2}
+.ark .mosaic img{transition:transform .6s}
+.ark .mosaic div:hover img{transform:scale(1.06)}
+.ark .note{max-width:70ch;font-size:15px;color:rgba(255,255,255,.78)}
+
+/* PLATAFORMA */
+.ark .checks{list-style:none;margin:26px 0 24px;display:grid;gap:12px}
+.ark .checks li{position:relative;padding-left:34px;font-size:15.5px}
+.ark .checks li::before{content:"";position:absolute;left:0;top:4px;width:20px;height:20px;border-radius:50%;background:var(--g-800) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/12px no-repeat}
+
+/* GFT */
+.ark .gft{background:var(--cream)}
+.ark .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:44px 0 28px}
+.ark .card{background:#fff;border-radius:var(--radius);padding:28px 24px;border-top:4px solid var(--g-400)}
+.ark .card h3{font-size:17px;margin-bottom:10px;color:var(--g-800)}
+.ark .card p{font-size:14.5px;color:var(--muted)}
+.ark .small{font-size:14px;color:var(--muted);max-width:72ch}
+.ark .center .small{margin:0 auto}
+
+/* PASSOS */
+.ark .steps{list-style:none;counter-reset:s;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin:48px 0 28px;position:relative}
+.ark .steps li{counter-increment:s;position:relative;padding-top:64px}
+.ark .steps li::before{content:counter(s);position:absolute;top:0;left:0;width:46px;height:46px;border-radius:50%;background:var(--g-800);color:#fff;font-weight:700;display:grid;place-items:center;z-index:1}
+.ark .steps li::after{content:"";position:absolute;top:22px;left:46px;right:-18px;height:2px;background:var(--line)}
+.ark .steps li:last-child::after{display:none}
+.ark .steps h3{font-size:16px;margin-bottom:8px;color:var(--g-800)}
+.ark .steps p{font-size:14.5px;color:var(--muted)}
+
+/* TECNOLOGIA / IMPACTO */
+.ark .impact{background:var(--cream)}
+
+/* ECOSSISTEMA + FUTURO — faixa com imagem larga */
+.ark .banner{position:relative;color:#fff;background:var(--g-900);padding:clamp(72px,12vw,150px) 0}
+.ark .banner>img{position:absolute;inset:0}
+.ark .banner::after{content:"";position:absolute;inset:0;background:rgba(11,26,12,.72)}
+.ark .banner .wrap{position:relative;z-index:2;max-width:860px}
+.ark .banner p{font-size:clamp(16px,1.6vw,19px);font-weight:300;opacity:.94}
+
+/* CTA FINAL */
+.ark .final{background:var(--g-900);color:#fff;text-align:center}
+.ark .final .lead{color:rgba(255,255,255,.78);margin:0 auto 34px}
+.ark .final .btns{justify-content:center;margin-bottom:22px}
+.ark .disclaimer{background:var(--cream-2);padding:44px 0}
+.ark .disclaimer h4{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--g-800);margin-bottom:14px}
+.ark .disclaimer p{font-size:13px;color:var(--muted);max-width:90ch}
+.ark .signature{font-size:12px;letter-spacing:.3em;text-transform:uppercase;opacity:.7;margin-top:34px}
+
+/* animação de entrada (sem JS ela simplesmente não esconde nada) */
+.ark.js .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.ark.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.ark.js .reveal{opacity:1;transform:none;transition:none}}
+
+/* TABLET */
+@media (max-width:1024px){
+  .ark .cards{grid-template-columns:repeat(2,1fr)}
+  .ark .steps{grid-template-columns:1fr;gap:0}
+  .ark .steps li{padding:0 0 30px 66px;min-height:46px}
+  .ark .steps li::after{top:46px;bottom:0;left:22px;right:auto;width:2px;height:auto}
+  .ark .pillars{grid-template-columns:repeat(2,1fr)}
+  .ark .pillar,.ark .pillar:nth-child(4),.ark .pillar:nth-child(5){grid-column:span 1}
+  .ark .pillar:nth-child(5){grid-column:span 2}
+}
+/* MOBILE */
+@media (max-width:768px){
+  .ark .split,.ark .split.rev{grid-template-columns:1fr}
+  .ark .split.rev .media{order:0}
+  .ark .media,.ark .media.wide{aspect-ratio:4/3}
+  .ark .mosaic{grid-template-columns:1fr 1fr;grid-template-rows:180px 150px 150px}
+  .ark .mosaic div:nth-child(1){grid-column:span 2;grid-row:span 1}
+  .ark .mosaic div:nth-child(4){grid-column:span 2}
+  .ark .hero{min-height:88vh}
+  .ark .btns .btn{width:100%}
+}
+@media (max-width:560px){
+  .ark .wrap{padding:0 18px}
+  .ark .cards,.ark .pillars{grid-template-columns:1fr}
+  .ark .pillar:nth-child(5){grid-column:span 1}
+}
+</style>
+
+<div class="ark" id="ark-island">
+
+  <!-- HERO -->
+  <header class="hero" id="ark-topo">
+    <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2000&q=75" alt="Floresta preservada com luz entre as árvores" loading="eager">
+    <div class="wrap">
+      <span class="eyebrow">Greenfinity Universe</span>
+      <h1 class="brand">ARK ISLAND</h1>
+      <p class="tag">A natureza é o nosso patrimônio. A preservação é o nosso legado.</p>
+      <p class="sub">Um novo conceito de conexão entre natureza, experiências, tecnologia e sustentabilidade.</p>
+      <div class="btns">
+        <a class="btn btn-solid" href="#ark-visao">Conheça o projeto</a>
+        <a class="btn btn-ghost" href="#ark-experiencias">Explore as experiências</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- INTRODUÇÃO -->
+  <section>
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="eyebrow">Conceito</span>
+        <h2>Natureza e inovação caminhando juntas</h2>
+        <p class="lead">A Ark Island nasce de uma visão de futuro em que a preservação ambiental e a inovação podem caminhar juntas. Um projeto concebido para aproximar pessoas da natureza, valorizar a biodiversidade e explorar novas possibilidades de experiências sustentáveis.</p>
+        <p class="lead">Integrada à visão do Greenfinity Universe, a Ark Island propõe uma abordagem na qual conservação ambiental, experiências e tecnologia digital poderão se conectar em um ecossistema de desenvolvimento integrado.</p>
+        <p class="lead">Mais do que um destino, a Ark Island representa uma proposta de valorização da natureza e de construção de um legado para as próximas gerações.</p>
+      </div>
+      <div class="media reveal"><img src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&w=1000&q=75" alt="Ilha tropical cercada por águas cristalinas" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- 1. VISÃO -->
+  <section class="vision" id="ark-visao">
+    <div class="wrap split rev">
+      <div class="media wide reveal"><img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1400&q=75" alt="Paisagem de montanhas cobertas de névoa" loading="lazy"></div>
+      <div class="reveal">
+        <span class="eyebrow">1. Nossa visão</span>
+        <p class="quote">Preservar a natureza. Criar experiências. Construir um legado.</p>
+        <p class="lead">Acreditamos que a natureza deve ser valorizada não apenas por sua beleza, mas por sua importância para a vida e para o equilíbrio dos ecossistemas.</p>
+        <p class="lead">Nossa visão é desenvolver uma iniciativa que aproxime conservação ambiental, turismo consciente, experiências exclusivas e soluções inovadoras, respeitando as características de cada território e os limites dos ambientes naturais.</p>
+        <p class="lead">A Ark Island busca construir uma identidade própria, orientada pela responsabilidade ambiental, pela inovação e pela criação de experiências que promovam uma conexão mais consciente entre pessoas e natureza.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. PILARES -->
+  <section>
+    <div class="wrap">
+      <div class="center reveal">
+        <span class="eyebrow">2. Os pilares da Ark Island</span>
+        <h2>O que sustenta a nossa proposta</h2>
+      </div>
+      <div class="pillars">
+        <article class="pillar reveal"><span class="n">01</span><h3>Conservação da natureza</h3><p>A valorização da biodiversidade e a proteção dos ambientes naturais estão no centro da proposta. As iniciativas ambientais deverão ser planejadas conforme as características do território, as necessidades de conservação e as condições de implementação.</p></article>
+        <article class="pillar reveal"><span class="n">02</span><h3>Experiências em harmonia com a natureza</h3><p>A proposta poderá integrar hospedagem, contemplação, atividades ao ar livre e experiências de conexão com o ambiente natural, priorizando soluções que respeitem a paisagem e reduzam os impactos ambientais.</p></article>
+        <article class="pillar reveal"><span class="n">03</span><h3>Turismo consciente</h3><p>Desenvolver experiências que incentivem o respeito à natureza, a educação ambiental e a valorização responsável dos recursos naturais.</p></article>
+        <article class="pillar reveal"><span class="n">04</span><h3>Inovação e tecnologia</h3><p>Explorar ferramentas digitais capazes de facilitar o acesso a serviços, organizar experiências, conectar parceiros e aprimorar a jornada dos usuários.</p></article>
+        <article class="pillar reveal"><span class="n">05</span><h3>Desenvolvimento sustentável</h3><p>Buscar um modelo de desenvolvimento que considere a viabilidade operacional, a responsabilidade ambiental e a continuidade das iniciativas no longo prazo.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. EXPERIÊNCIA — mosaico -->
+  <section class="experience on-dark" id="ark-experiencias">
+    <div class="wrap">
+      <div class="reveal" style="max-width:760px">
+        <span class="eyebrow">3. Uma nova experiência de conexão com a natureza</span>
+        <h2>Imagine um ambiente em que a natureza ocupa o centro da experiência.</h2>
+        <p class="lead">Paisagens preservadas, arquitetura integrada ao entorno, experiências cuidadosamente planejadas e uma proposta de hospitalidade que valoriza a tranquilidade e a conexão com o mundo natural.</p>
+      </div>
+      <div class="mosaic reveal">
+        <div><img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=75" alt="Vale verde ao amanhecer" loading="lazy"></div>
+        <div><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=700&q=75" alt="Trilha em meio à floresta" loading="lazy"></div>
+        <div><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=75" alt="Observação da natureza ao entardecer" loading="lazy"></div>
+        <div><img src="https://images.unsplash.com/photo-1476231682828-37e571bc172f?auto=format&fit=crop&w=1200&q=75" alt="Lago cercado por vegetação" loading="lazy"></div>
+      </div>
+      <div class="reveal">
+        <p class="note">A Ark Island pretende explorar esse conceito por meio de experiências que poderão incluir hospedagem, trilhas, observação da biodiversidade, atividades educativas e outras formas de interação responsável com a natureza.</p>
+        <p class="note">Cada experiência deverá ser desenvolvida de acordo com a realidade do projeto, considerando viabilidade, licenciamento e critérios ambientais. O objetivo é criar uma proposta em que a experiência do visitante e o respeito ao ambiente natural sejam partes complementares de uma mesma visão.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. PLATAFORMA -->
+  <section>
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="eyebrow">4. A plataforma digital Ark Island</span>
+        <h2>Uma jornada digital simples, transparente e intuitiva</h2>
+        <p class="lead">A Ark Island poderá contar com uma plataforma digital própria, desenvolvida para conectar usuários aos serviços e às experiências oferecidos pelo projeto. A plataforma poderá reunir, conforme sua implementação:</p>
+        <ul class="checks">
+          <li>Apresentação das experiências e dos serviços disponíveis.</li>
+          <li>Informações sobre hospedagem e atividades.</li>
+          <li>Sistema de consulta e reservas.</li>
+          <li>Área do usuário e histórico de operações.</li>
+          <li>Integração com parceiros e prestadores de serviços.</li>
+          <li>Funcionalidades de pagamento compatíveis com os meios habilitados.</li>
+          <li>Recursos de integração com o Greenfinity Universe Token (GFT).</li>
+        </ul>
+        <p class="small">A proposta é permitir que os usuários conheçam as opções disponíveis e acessem os serviços conforme as condições de cada oferta.</p>
+      </div>
+      <div class="media reveal"><img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=1000&q=75" alt="Cachoeira em meio à mata" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- 5. GFT -->
+  <section class="gft" id="ark-gft">
+    <div class="wrap">
+      <div class="center reveal">
+        <span class="eyebrow">5. GFT: a conexão digital com o Greenfinity Universe</span>
+        <h2>Uma experiência integrada a um ecossistema de utilidade digital</h2>
+        <p class="lead">A Ark Island poderá integrar o Greenfinity Universe Token (GFT), ativo digital concebido para conectar serviços e projetos participantes do ecossistema Greenfinity Universe. Essa integração poderá permitir o desenvolvimento de funcionalidades específicas dentro da plataforma, criando uma conexão entre a experiência do usuário e a infraestrutura digital do ecossistema.</p>
+        <p class="lead"><strong>O GFT não substitui automaticamente todos os meios de pagamento.</strong> Sua utilização dependerá das funcionalidades implementadas, das condições comerciais e das regras aplicáveis.</p>
+      </div>
+      <h3 class="center reveal" style="font-size:20px;margin-top:48px">Como o GFT poderá ser utilizado na Ark Island</h3>
+      <div class="cards">
+        <article class="card reveal"><h3>Serviços e experiências</h3><p>Possibilidade de utilizar o GFT na aquisição de experiências ou serviços elegíveis disponibilizados pela plataforma.</p></article>
+        <article class="card reveal"><h3>Reservas</h3><p>Possibilidade de integração do token a determinados processos de reserva, conforme a implementação técnica e as regras comerciais estabelecidas.</p></article>
+        <article class="card reveal"><h3>Benefícios e programas de acesso</h3><p>Desenvolvimento de benefícios ou condições específicas para usuários participantes, caso sejam formalmente definidos pelo projeto.</p></article>
+        <article class="card reveal"><h3>Integração com o ecossistema</h3><p>Possibilidade de conexão com outras plataformas e serviços participantes do Greenfinity Universe, conforme cada integração for habilitada.</p></article>
+      </div>
+      <p class="small center">Essas aplicações representam possibilidades de desenvolvimento. A aceitação do GFT em cada serviço será informada oficialmente quando a funcionalidade correspondente estiver disponível.</p>
+    </div>
+  </section>
+
+  <!-- 6. PASSOS -->
+  <section>
+    <div class="wrap">
+      <div class="center reveal">
+        <span class="eyebrow">6. Como funcionará a integração com o GFT</span>
+        <h2>Etapas pensadas para clareza e segurança</h2>
+        <p class="lead">A integração poderá ser estruturada em etapas para garantir clareza operacional e segurança.</p>
+      </div>
+      <ol class="steps reveal">
+        <li><h3>Conhecer a experiência</h3><p>O usuário acessa a plataforma Ark Island e consulta os serviços disponíveis.</p></li>
+        <li><h3>Selecionar um serviço elegível</h3><p>Caso o GFT esteja habilitado para determinada oferta, a plataforma apresentará as condições de utilização correspondentes.</p></li>
+        <li><h3>Consultar as condições</h3><p>O usuário terá acesso às informações sobre preço, quantidade de tokens exigida, eventuais taxas e regras aplicáveis antes de confirmar a operação.</p></li>
+        <li><h3>Realizar a operação</h3><p>Quando a funcionalidade estiver implementada, a plataforma poderá processar a utilização do GFT conforme a infraestrutura técnica e os procedimentos de validação adotados.</p></li>
+        <li><h3>Consultar a confirmação</h3><p>A plataforma deverá apresentar o resultado da operação e as informações relevantes para o usuário, conforme os recursos disponibilizados.</p></li>
+      </ol>
+      <p class="small center">A implementação deverá contemplar mecanismos de segurança, transparência e suporte, além das medidas necessárias para atender às exigências legais aplicáveis.</p>
+    </div>
+  </section>
+
+  <!-- 7. TECNOLOGIA — imagem à esquerda -->
+  <section class="vision">
+    <div class="wrap split rev">
+      <div class="media reveal"><img src="https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?auto=format&fit=crop&w=1000&q=75" alt="Folhagem tropical em detalhe" loading="lazy"></div>
+      <div class="reveal">
+        <span class="eyebrow">7. Tecnologia a serviço da experiência</span>
+        <h2>Inovação digital com identidade própria</h2>
+        <p class="lead">A inovação digital poderá desempenhar um papel importante na organização e na evolução da Ark Island. A integração com o GFT representa uma possibilidade de conectar a plataforma a uma estrutura digital mais ampla, permitindo explorar novas funcionalidades sem comprometer a identidade própria do projeto.</p>
+        <p class="lead">Essa arquitetura poderá evoluir gradualmente, conforme as necessidades dos usuários, a viabilidade técnica e a expansão do ecossistema.</p>
+        <p class="lead">A tecnologia deverá servir à experiência e aos objetivos do projeto, mantendo a clareza das informações e a facilidade de utilização como prioridades.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. IMPACTO -->
+  <section class="impact" style="background:#fff">
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="eyebrow">8. Natureza, responsabilidade e impacto</span>
+        <h2>Valorizar a natureza com responsabilidade ambiental</h2>
+        <p class="lead">A Ark Island tem como referência uma visão de desenvolvimento na qual a valorização da natureza deve ser acompanhada de responsabilidade ambiental. Ações de conservação, educação ambiental e valorização da biodiversidade poderão integrar o projeto conforme forem definidas e implementadas.</p>
+        <p class="lead">Nosso compromisso é comunicar com clareza as iniciativas efetivamente realizadas, distinguindo os objetivos futuros das ações já executadas.</p>
+        <p class="lead">A sustentabilidade deverá orientar o planejamento, as decisões operacionais e a evolução do projeto, com atenção aos impactos ambientais e à viabilidade de longo prazo.</p>
+      </div>
+      <div class="media reveal"><img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1000&q=75" alt="Amanhecer sobre vale preservado" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- 9. ECOSSISTEMA — faixa larga -->
+  <section class="banner">
+    <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2000&q=70" alt="Lago entre montanhas" loading="lazy">
+    <div class="wrap reveal">
+      <span class="eyebrow" style="color:var(--g-400)">9. Ark Island dentro do Greenfinity Universe</span>
+      <h2>Marcas complementares, comunicação clara</h2>
+      <p>A Ark Island terá identidade, proposta e plataforma próprias, podendo integrar o ecossistema Greenfinity Universe por meio de conexões tecnológicas e aplicações de utilidade digital.</p>
+      <p>Enquanto o Greenfinity Universe Token apresenta a estrutura geral do ativo digital, a Ark Island representa uma possível aplicação desse ecossistema em experiências, serviços e iniciativas relacionadas à natureza. Essa organização permite desenvolver uma relação complementar entre as marcas, mantendo uma comunicação clara para os usuários.</p>
+      <p>O GFT poderá conectar diferentes iniciativas, desde que cada projeto habilite suas aplicações e estabeleça as condições correspondentes.</p>
+    </div>
+  </section>
+
+  <!-- 10. FUTURO -->
+  <section>
+    <div class="wrap center reveal">
+      <span class="eyebrow">10. Uma visão de futuro</span>
+      <h2>Natureza, experiências e inovação</h2>
+      <p class="lead">A Ark Island representa uma proposta de aproximação entre natureza, experiências e inovação. Uma iniciativa que busca explorar novas formas de valorizar o ambiente natural e criar experiências sustentáveis, com a possibilidade de utilizar tecnologia digital para conectar serviços, usuários e projetos.</p>
+      <p class="lead">Nosso objetivo é desenvolver essa visão de maneira responsável, respeitando o estágio real de cada iniciativa e construindo uma base sólida para sua evolução.</p>
+    </div>
+  </section>
+
+  <!-- 11. CTA FINAL -->
+  <section class="final on-dark" id="ark-explore">
+    <div class="wrap reveal">
+      <span class="eyebrow">11. Explore a Ark Island</span>
+      <h2>Descubra uma nova perspectiva de conexão com a natureza.</h2>
+      <p class="lead">Conheça nossa visão, explore as possibilidades do projeto e acompanhe o desenvolvimento de uma iniciativa que busca integrar experiências, inovação e responsabilidade ambiental.</p>
+      <div class="btns">
+        <a class="btn btn-solid" href="#ark-visao">Conheça o projeto</a>
+        <a class="btn btn-ghost" href="#ark-experiencias">Explore as experiências</a>
+        <!-- TROQUE o href abaixo pela URL oficial da página do Greenfinity Universe Token -->
+        <a class="btn btn-ghost" id="ark-gft-link" href="https://www.greenfinityuniverse.com.br/blank" target="_top" rel="noopener">Conheça o GFT</a>
+        <a class="btn btn-ghost" href="#ark-impacto-dev">Acompanhe o desenvolvimento</a>
+      </div>
+      <p class="signature">ARK ISLAND · Preserving Nature. Creating Experiences. Building a Legacy.</p>
+    </div>
+  </section>
+
+  <!-- AVISO -->
+  <aside class="disclaimer" id="ark-impacto-dev">
+    <div class="wrap">
+      <h4>Aviso institucional</h4>
+      <p>A Ark Island é apresentada nesta página conforme sua proposta de desenvolvimento. Serviços, hospedagem, reservas, experiências, integrações digitais e funcionalidades relacionadas ao GFT dependem de definição, implementação e disponibilidade efetiva.</p>
+      <p>A utilização do GFT estará sujeita às condições divulgadas para cada serviço habilitado. Não há garantia de valorização financeira, rentabilidade ou aceitação do token em todas as operações.</p>
+      <p>As iniciativas ambientais deverão ser descritas de acordo com suas ações e resultados verificáveis. A execução do projeto estará sujeita à viabilidade técnica, operacional, ambiental e às autorizações legalmente aplicáveis.</p>
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  var root=document.getElementById('ark-island'); if(!root) return;
+  root.classList.add('js');
+  var els=root.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
+  els.forEach(function(e){io.observe(e)});
+  // rolagem suave para as âncoras internas
+  root.querySelectorAll('a[href^="#ark-"]').forEach(function(a){
+    a.addEventListener('click',function(ev){
+      var t=document.getElementById(a.getAttribute('href').slice(1));
+      if(t){ev.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+})();
+</script>
