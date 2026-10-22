@@ -1,0 +1,35 @@
+<!-- MASCOTE GREENFINITY UNIVERSE — Wix > Configurações > Custom Code > "Body - final", todas as páginas, carregar uma vez -->
+<style>
+  #gf-mascote{position:fixed;right:22px;bottom:22px;bottom:calc(22px + env(safe-area-inset-bottom,0px));
+    height:124px;z-index:2147483000;pointer-events:none;margin:0;padding:0;
+    animation:gfEntrada .9s cubic-bezier(.2,.8,.2,1) both}
+  #gf-mascote img{display:block;height:100%;width:auto;object-fit:contain;-webkit-user-drag:none;user-select:none;
+    animation:gfFlutua 4.5s ease-in-out 1.2s infinite;will-change:transform}
+  #gf-mascote a{display:block;height:100%;pointer-events:auto}
+  @media (max-width:1024px){#gf-mascote{height:100px;right:16px}}
+  @media (max-width:600px){#gf-mascote{height:72px;right:12px;bottom:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}}
+  @keyframes gfEntrada{from{opacity:0;transform:translateY(24px) scale(.92)}to{opacity:1;transform:none}}
+  @keyframes gfFlutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @media (prefers-reduced-motion:reduce){#gf-mascote,#gf-mascote img{animation:none}}
+  @media print{#gf-mascote{display:none}}
+</style>
+<script>
+(function(){
+  /* ===== CONFIGURAÇÃO ===== */
+  var SRC  = "COLE_AQUI_A_URL_PUBLICA_DO_PNG";   /* URL pública do PNG transparente do gorila (Mídia do Wix) */
+  var LINK = "";          /* futuro: URL oficial do GFT para tornar o mascote clicável (vazio = só visual) */
+  var OFFSET_BOTTOM = 0;  /* px extras para subir o gorila e não cobrir WhatsApp/cookies (ex.: 70) */
+  /* ======================== */
+  if (!SRC || document.getElementById('gf-mascote')) return;
+  var ALT = 'Mascote da Greenfinity Universe';
+  function montar(){
+    var w = document.createElement('div');
+    w.id = 'gf-mascote';
+    if (OFFSET_BOTTOM) w.style.marginBottom = OFFSET_BOTTOM + 'px';
+    var img = '<img src="' + SRC + '" alt="' + ALT + '" width="216" height="340" decoding="async">';
+    w.innerHTML = LINK ? '<a href="' + LINK + '" aria-label="' + ALT + '">' + img + '</a>' : img;
+    document.body.appendChild(w);
+  }
+  if (document.body) montar(); else document.addEventListener('DOMContentLoaded', montar);
+})();
+</script>
