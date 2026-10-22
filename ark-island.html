@@ -2,7 +2,7 @@
   ARK ISLAND — bloco de página (cole no elemento "Incorporar HTML" / HTML iframe do Wix,
   ou em qualquer página HTML). Tudo é isolado sob a classe .ark (não afeta o resto do site).
   Identidade: Montserrat, verde-floresta #122a13, creme #f6f4e9, branco/preto (Greenfinity Universe).
-  Troque o href do botão "Conheça o GFT" (id ark-gft-link) pela URL oficial do token.
+  Página institucional, sem botões.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,20 +30,9 @@
 .ark p+p{margin-top:16px}
 .ark .center{text-align:center}.ark .center .lead{margin-left:auto;margin-right:auto}
 
-/* botões */
-.ark .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 13px/1 'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:17px 28px;border-radius:999px;border:2px solid transparent;cursor:pointer;transition:.25s}
-.ark .btn-solid{background:var(--cream);color:var(--g-800)}
-.ark .btn-solid:hover{background:#fff;transform:translateY(-2px)}
-.ark .btn-green{background:var(--g-800);color:#fff}
-.ark .btn-green:hover{background:var(--g-600);transform:translateY(-2px)}
-.ark .btn-ghost{border-color:rgba(255,255,255,.55);color:#fff}
-.ark .btn-ghost:hover{background:#fff;color:var(--g-800)}
-.ark .btns{display:flex;flex-wrap:wrap;gap:12px}
 
 /* HERO — imagem em tela cheia, texto ancorado embaixo */
-.ark .hero{position:relative;min-height:min(92vh,820px);display:flex;align-items:flex-end;color:#fff;padding:0;background:var(--g-900)}
-.ark .hero>img{position:absolute;inset:0}
-.ark .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,26,12,.25) 0%,rgba(11,26,12,.55) 55%,rgba(11,26,12,.92) 100%)}
+.ark .hero{position:relative;min-height:min(78vh,640px);display:flex;align-items:flex-end;color:#fff;padding:0;background:linear-gradient(160deg,var(--g-900) 0%,var(--g-800) 60%,var(--g-600) 140%)}
 .ark .hero .wrap{width:100%;position:relative;z-index:2;padding-top:140px;padding-bottom:clamp(40px,7vw,88px)}
 .ark .hero .brand{font-size:clamp(46px,10vw,128px);font-weight:800;letter-spacing:-.04em;line-height:.95;margin-bottom:24px}
 .ark .hero .tag{font-size:clamp(18px,2.4vw,28px);font-weight:500;max-width:30ch;margin-bottom:18px}
@@ -115,8 +104,7 @@
 
 /* CTA FINAL */
 .ark .final{background:var(--g-900);color:#fff;text-align:center}
-.ark .final .lead{color:rgba(255,255,255,.78);margin:0 auto 34px}
-.ark .final .btns{justify-content:center;margin-bottom:22px}
+.ark .final .lead{color:rgba(255,255,255,.78);margin:0 auto}
 .ark .disclaimer{background:var(--cream-2);padding:44px 0}
 .ark .disclaimer h4{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--g-800);margin-bottom:14px}
 .ark .disclaimer p{font-size:13px;color:var(--muted);max-width:90ch}
@@ -145,8 +133,7 @@
   .ark .mosaic{grid-template-columns:1fr 1fr;grid-template-rows:180px 150px 150px}
   .ark .mosaic div:nth-child(1){grid-column:span 2;grid-row:span 1}
   .ark .mosaic div:nth-child(4){grid-column:span 2}
-  .ark .hero{min-height:88vh}
-  .ark .btns .btn{width:100%}
+  .ark .hero{min-height:70vh}
 }
 @media (max-width:560px){
   .ark .wrap{padding:0 18px}
@@ -159,16 +146,11 @@
 
   <!-- HERO -->
   <header class="hero" id="ark-topo">
-    <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2000&q=75" alt="Floresta preservada com luz entre as árvores" loading="eager">
     <div class="wrap">
       <span class="eyebrow">Greenfinity Universe</span>
       <h1 class="brand">ARK ISLAND</h1>
       <p class="tag">A natureza é o nosso patrimônio. A preservação é o nosso legado.</p>
       <p class="sub">Um novo conceito de conexão entre natureza, experiências, tecnologia e sustentabilidade.</p>
-      <div class="btns">
-        <a class="btn btn-solid" href="#ark-visao">Conheça o projeto</a>
-        <a class="btn btn-ghost" href="#ark-experiencias">Explore as experiências</a>
-      </div>
     </div>
   </header>
 
@@ -355,13 +337,6 @@
       <span class="eyebrow">11. Explore a Ark Island</span>
       <h2>Descubra uma nova perspectiva de conexão com a natureza.</h2>
       <p class="lead">Conheça nossa visão, explore as possibilidades do projeto e acompanhe o desenvolvimento de uma iniciativa que busca integrar experiências, inovação e responsabilidade ambiental.</p>
-      <div class="btns">
-        <a class="btn btn-solid" href="#ark-visao">Conheça o projeto</a>
-        <a class="btn btn-ghost" href="#ark-experiencias">Explore as experiências</a>
-        <!-- TROQUE o href abaixo pela URL oficial da página do Greenfinity Universe Token -->
-        <a class="btn btn-ghost" id="ark-gft-link" href="https://www.greenfinityuniverse.com.br/blank" target="_top" rel="noopener">Conheça o GFT</a>
-        <a class="btn btn-ghost" href="#ark-impacto-dev">Acompanhe o desenvolvimento</a>
-      </div>
       <p class="signature">ARK ISLAND · Preserving Nature. Creating Experiences. Building a Legacy.</p>
     </div>
   </section>
@@ -385,12 +360,5 @@
   if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
   els.forEach(function(e){io.observe(e)});
-  // rolagem suave para as âncoras internas
-  root.querySelectorAll('a[href^="#ark-"]').forEach(function(a){
-    a.addEventListener('click',function(ev){
-      var t=document.getElementById(a.getAttribute('href').slice(1));
-      if(t){ev.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
-    });
-  });
 })();
 </script>
