@@ -4,3 +4,5 @@ backend/.env
 backend/data/
 .DS_Store
 *.log
+__pycache__/
+*.pyc
