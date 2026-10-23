@@ -16,6 +16,7 @@ BG = np.array([2, 19, 35], float)
 def load(n): return np.array(Image.open(f'{I}{n}.png').convert('RGB'))
 P = {n: load(n) for n in range(1, 21)}
 P21 = load(21)
+P[8][52:162] = P[11][52:162]   # a sobreposicao de outro app nao faz parte do Rango
 
 # ---------- menu limpo (sem destaque) montado com trechos reais dos prints 1 e 4 ----------
 a4, a1 = P[4].astype(np.uint8), P[1].astype(np.uint8)
@@ -23,10 +24,21 @@ T = np.zeros((1198, 490, 3), np.uint8)               # lista rolavel, coords do 
 T[:] = a4[162:1360, :490]
 T[466-162:557-162] = a1[356:447, :490]               # linha "Lancar Venda" inativa (print 1)
 T[1033:1198] = a1[1085:1250, :490]                   # Produtos e Estoque / Visao Geral (print 1)
+from PIL import ImageFont
+T = np.concatenate([T, np.tile(np.array([2, 19, 35], np.uint8), (362, 490, 1))], 0)
+_f = ImageFont.truetype('/usr/share/fonts/opentype/inter/Inter-Medium.otf', 28)
+def _text_row(label, cy):
+    im = Image.fromarray(T); d = ImageDraw.Draw(im)
+    bx = d.textbbox((0, 0), label, font=_f)
+    d.text((51-bx[0], cy+2-(bx[3]-bx[1])//2-bx[1]), label, font=_f, fill=(201, 218, 238))
+    return np.array(im)
+for _lbl, _cy in [('Funcionários', 1236), ('Relatórios', 1321), ('CMV e Lucro', 1406), ('Perdas e Consumo', 1491)]:
+    T = _text_row(_lbl, _cy)
 FOOT = a4[1260:1570, :490]                           # rodape fixo: usuario + Sair (print 4)
 VIEW_H = 1260 - TOP                                  # 1098
 ROWS = dict(dashboard=264, lancar=349, pedidos=503, entregas=588, whatsapp=673,
-            historico=758, receitas=912, produtos=1066, visao=1151)
+            historico=758, receitas=912, produtos=1066, visao=1151,
+            funcionarios=1236, relatorios=1321, cmv=1406, perdas=1491)
 
 def pill_mask(h=79, w=434, r=22):
     m = Image.new('L', (w*4, h*4), 0)
@@ -122,12 +134,22 @@ def render(base, scrim=0.0, menu=None, banner=None, finger=None):
 
 # ---------- linha do tempo ----------
 frames_written = 0
+import json
+DUR = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'narracao', 'duracoes.json')))
+cues = []; narr_end = 0.0; last = [None]
+def now(): return frames_written/FPS
+def pad():
+    while now() < narr_end: emit(last[0])
+def say(key):
+    """espera a fala anterior terminar (segurando o quadro) e comeca a proxima agora."""
+    global narr_end
+    pad(); cues.append((key, now())); narr_end = now() + DUR[key] + 0.3
 ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}',
                        '-r', str(FPS), '-i', '-', '-c:v', 'libx264', '-preset', 'medium', '-crf', '18',
                        '-pix_fmt', 'yuv420p', '-movflags', '+faststart', OUT], stdin=subprocess.PIPE)
 def emit(fr):
     global frames_written
-    ff.stdin.write(fr.tobytes()); frames_written += 1
+    ff.stdin.write(fr.tobytes()); frames_written += 1; last[0] = fr
 def n(sec): return max(1, int(round(sec*FPS)))
 
 class Fing:
@@ -240,10 +262,15 @@ def scroll_anim(sc, p0, p1, sec, finger=None):
         emit(render(sc.at(p), finger=finger))
 
 # =============== ROTEIRO ===============
-# Abertura: menu aberto sobre o Dashboard (print 1) -> toque em Dashboard -> fecha
+def show_menu_hold(base, key, sec): 
+    for _ in range(n(sec)): emit(render(base, scrim=1, menu=dict(prog=1, ms=0, act=[(key, 1)])))
+SC_REL = Scroll(P[10], P[9], 1353)
+
+# Abertura: menu aberto sobre o Dashboard -> toque em Dashboard -> fecha
 fg.pos = (450.0, 1000.0)
+say('intro')
 menu_open(P[2], 'dashboard')
-for _ in range(n(0.9)): emit(render(P[2], scrim=1, menu=dict(prog=1, ms=0, act=[('dashboard', 1)])))
+show_menu_hold(P[2], 'dashboard', 0.9)
 k = n(0.5); a0 = fg.pos
 for i in range(1, k+1):
     t = ease(i/k); pos = (a0[0]+(244-a0[0])*t, a0[1]+(426-a0[1])*t, 1.0)
@@ -251,38 +278,45 @@ for i in range(1, k+1):
 fg.pos = (244.0, 426.0)
 for fpos in press(): emit(render(P[2], scrim=1, menu=dict(prog=1, ms=0, act=[('dashboard', 1)]), finger=fpos))
 menu_close(P[2], 'dashboard')
-# --- Dashboard (prints 2 -> 3, rolagem real) ---
+# --- Dashboard (2 -> 3) ---
 fg.pos = (400.0, 1150.0)
-hold(P[2], 1.6)
-scroll_anim(SC_DASH, 0, 1, 1.4, finger=None)
-hold(P[3], 2.4, finger=False)
+say('dash1'); hold(P[2], 1.0)
+pad(); say('dash2')
+scroll_anim(SC_DASH, 0, 1, 1.4)
+hold(P[3], 1.5, finger=False)
+pad()
 scroll_anim(SC_DASH, 1, 0, 1.1)
-hold(P[2], 0.4, finger=False)
+hold(P[2], 0.3, finger=False)
 
-# --- Lancar Venda (prints 4/5 -> 6 -> 7 -> 5) ---
+# --- Lancar Venda (5 -> 6 -> 7 -> 5) ---
+say('nav_lanc')
 navigate(P[2], 'dashboard', P[5], 'lancar')
 fg.pos = (400.0, 1100.0)
-hold(P[5], 1.2)
+say('lanc1'); hold(P[5], 1.0)
+pad(); say('lanc2')
 scroll_anim(SC_LANC, 0, 1, 1.4)
 hold(P[6], 1.0, finger=False)
 show_finger_move(P[6], (373, 1425), 0.6)
 tap(P[6])
+say('lanc3')
 modal(P[6], P[7], 901, True, 0.5)
-hold(P[7], 2.3, finger=False)
+hold(P[7], 1.0, finger=False)
+pad()
 show_finger_move(P[7], (373, 1488), 0.5)
 tap(P[7])
 modal(P[5], P[7], 901, False, 0.45)
-hold(P[5], 0.5, finger=False)
+hold(P[5], 0.4, finger=False)
 
-# --- Pedidos / Delivery (21 -> 20 -> 19 -> 18) ---
+# --- Pedidos / Delivery (aviso -> 20 -> 19 -> 18) ---
 def ped_extra(dst_base, ms_cur):
-    # chega o aviso de novo pedido com selo "1" no menu (print 21)
+    say('ped2')
     k = n(0.45)
     for i in range(1, k+1):
         b = eo(i/k)
         emit(render(dst_base, scrim=1, menu=dict(prog=1, ms=0, act=[('pedidos', 1)], badge=True), banner=b))
-    for _ in range(n(1.7)):
+    for _ in range(n(1.2)):
         emit(render(dst_base, scrim=1, menu=dict(prog=1, ms=0, act=[('pedidos', 1)], badge=True), banner=1.0))
+    pad()
     k = n(0.55); a0 = (244.0, ROWS['pedidos']+TOP)
     for i in range(1, k+1):
         t = ease(i/k); pos = (a0[0]+(604-a0[0])*t, a0[1]+(421-a0[1])*t, 1.0)
@@ -290,43 +324,53 @@ def ped_extra(dst_base, ms_cur):
     fg.pos = (604.0, 421.0)
     for fpos in press(): emit(render(dst_base, scrim=1, menu=dict(prog=1, ms=0, act=[('pedidos', 1)], badge=True), banner=1.0, finger=fpos))
     k = n(0.35)
-    for i in range(1, k+1):                      # aviso sai, fundo vira o pedido aberto (print 20)
+    for i in range(1, k+1):
         t = ease(i/k); bg = np.clip(dst_base.astype(float)*(1-t)+P[20].astype(float)*t, 0, 255).astype(np.uint8)
         emit(render(bg, scrim=1-t, menu=dict(prog=1, ms=0, act=[('pedidos', 1)], badge=True), banner=1-t))
     menu_close(P[20], 'pedidos', badge=True)
+say('nav_ped')
 navigate(P[5], 'lancar', P[19], 'pedidos', extra=ped_extra)
 fg.pos = (373.0, 1000.0)
-hold(P[20], 2.4)
+say('ped3'); hold(P[20], 1.0)
+pad()
 show_finger_move(P[20], (373, 1413), 0.6)
 tap(P[20])
 modal(P[19], P[20], 516, False, 0.45)
-hold(P[19], 1.3, finger=False)
+say('ped4'); hold(P[19], 1.0, finger=False)
+pad(); say('ped5')
 fg.pos = (400.0, 1150.0)
 scroll_anim(SC_PED, 0, 1, 1.0, finger=fg.pos+(1.0,))
 crossfade(SC_PED.at(1), P[18], 0.4)
-hold(P[18], 2.4, finger=False)
+hold(P[18], 1.0, finger=False)
+pad()
 
-# --- Historico de Vendas (16 -> filtro Hoje 17) ---
+# --- Historico de Vendas (16 -> 17) ---
+say('nav_hist')
 navigate(P[18], 'pedidos', P[16], 'historico')
-hold(P[16], 1.5, finger=False)
+say('hist1'); hold(P[16], 1.0, finger=False)
+pad(); say('hist2')
 show_finger_move(P[16], (167, 413), 0.6)
 tap(P[16])
 crossfade(P[16], P[17], 0.4)
-hold(P[17], 2.4, finger=False)
+hold(P[17], 1.0, finger=False)
+pad()
 
-# --- Receitas (15 -> modal 14 -> 15) ---
+# --- Receitas (15 -> 14 -> 15) ---
+say('nav_rec')
 navigate(P[17], 'historico', P[15], 'receitas')
-hold(P[15], 1.4, finger=False)
+say('rec1'); hold(P[15], 1.0, finger=False)
+pad(); say('rec2')
 show_finger_move(P[15], (651, 553), 0.6)
 tap(P[15])
 k = n(0.5)
-for i in range(1, k+1):                              # modal sobe sobre a lista escurecida
+for i in range(1, k+1):
     t = eo(i/k); f = P[15].astype(float).copy()
     f[TOP:BOT] = f[TOP:BOT]*(1-SCRIM_A*t) + SCRIM_C*(SCRIM_A*t)
     off = int((BOT-TOP)*(1-t)); mdl = P[14][TOP:BOT]
     f[TOP+off:BOT] = mdl[:BOT-TOP-off]
     emit(np.clip(f, 0, 255).astype(np.uint8))
-hold(P[14], 2.4, finger=False)
+hold(P[14], 1.0, finger=False)
+pad()
 show_finger_move(P[14], (693, 215), 0.6)
 tap(P[14])
 k = n(0.4)
@@ -336,11 +380,53 @@ for i in range(1, k+1):
     off = int((BOT-TOP)*t); mdl = P[14][TOP:BOT]
     f[TOP+off:BOT] = mdl[:BOT-TOP-off]
     emit(np.clip(f, 0, 255).astype(np.uint8))
-hold(P[15], 0.5, finger=False)
+hold(P[15], 0.4, finger=False)
 
-# --- Produtos e Estoque (13) : menu rolado ate o item ---
+# --- Produtos e Estoque (13) ---
+say('nav_prod')
 navigate(P[15], 'receitas', P[13], 'produtos', ms_dst=100)
-hold(P[13], 3.2, finger=False)
+say('prod1'); hold(P[13], 1.0, finger=False)
+pad()
+
+# --- Funcionarios (8) ---
+say('nav_func')
+navigate(P[13], 'produtos', P[8], 'funcionarios', ms_dst=450)
+say('func1'); hold(P[8], 1.0, finger=False)
+pad()
+
+# --- Relatorios (10 -> 9) ---
+say('nav_rel')
+navigate(P[8], 'funcionarios', P[10], 'relatorios', ms_dst=450)
+say('rel1'); hold(P[10], 1.0, finger=False)
+pad(); say('rel2')
+fg.pos = (400.0, 1150.0)
+scroll_anim(SC_REL, 0, 1, 1.5, finger=fg.pos+(1.0,))
+hold(P[9], 1.0, finger=False)
+pad()
+
+# --- CMV e Lucro (11) ---
+say('nav_cmv')
+navigate(P[9], 'relatorios', P[11], 'cmv', ms_dst=450)
+say('cmv1'); hold(P[11], 1.0, finger=False)
+pad()
+
+# --- Perdas e Consumo (12) ---
+say('nav_perd')
+navigate(P[11], 'cmv', P[12], 'perdas', ms_dst=450)
+say('perd1'); hold(P[12], 1.0, finger=False)
+pad(); hold(P[12], 1.5, finger=False)
 
 ff.stdin.close(); ff.wait()
 print('frames', frames_written, 'dur', frames_written/FPS)
+
+# ---- mistura a narracao na trilha do video ----
+ND = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'narracao')
+cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-i', OUT]
+for key, t0 in cues: cmd += ['-i', os.path.join(ND, key + '.wav')]
+fc = ''.join(f'[{i+1}:a]adelay={int(t0*1000)}|{int(t0*1000)}[a{i}];' for i, (key, t0) in enumerate(cues))
+fc += ''.join(f'[a{i}]' for i in range(len(cues))) + f'amix=inputs={len(cues)}:normalize=0:dropout_transition=0,aresample=44100[aud]'
+final = OUT.replace('.mp4', '_narrado.mp4')
+cmd += ['-filter_complex', fc, '-map', '0:v', '-map', '[aud]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-shortest', final]
+subprocess.run(cmd, check=True)
+json.dump(cues, open(OUT.replace('.mp4', '_cues.json'), 'w'), indent=1)
+print('final', final)
