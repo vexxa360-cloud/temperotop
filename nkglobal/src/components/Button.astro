@@ -1,0 +1,33 @@
+---
+import { whatsappLink, WHATSAPP_MESSAGES } from '../config/site';
+interface Props {
+  variant?: 'outline' | 'gold' | 'whatsapp';
+  /** Link interno/externo. Se omitido e `whatsapp` for passado, usa o WhatsApp oficial. */
+  href?: string;
+  whatsapp?: keyof typeof WHATSAPP_MESSAGES;
+  type?: 'button' | 'submit';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+const { variant = 'gold', href, whatsapp, type, size = 'md', class: cls = '' } = Astro.props;
+const url = whatsapp ? whatsappLink(WHATSAPP_MESSAGES[whatsapp]) : href;
+const external = !!whatsapp || /^https?:/.test(url ?? '');
+const classes = `btn btn--${variant} btn--${size} ${cls}`;
+---
+{url ? (
+  <a class={classes} href={url} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}><slot /></a>
+) : (
+  <button class={classes} type={type ?? 'button'}><slot /></button>
+)}
+<style is:global>
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; font-family: var(--font-body); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; cursor: pointer; border-radius: 4px; border: 1px solid transparent; transition: background-color .25s, color .25s, border-color .25s, transform .25s, box-shadow .25s; min-height: 44px; }
+  .btn--md { font-size: .78rem; padding: .95rem 1.8rem; }
+  .btn--sm { font-size: .66rem; padding: .6rem 1.1rem; min-height: 40px; }
+  .btn--outline { color: var(--gold); border-color: var(--gold); background: transparent; }
+  .btn--outline:hover { background: var(--gold); color: var(--ink); }
+  .btn--gold { background: var(--gold); color: #fff; }
+  .btn--gold:hover { background: #b8a977; transform: translateY(-1px); }
+  .btn--whatsapp { background: var(--whatsapp-solid); color: #fff; box-shadow: 0 6px 16px rgba(22,163,74,.25); }
+  .btn--whatsapp:hover { background: #15803d; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+</style>

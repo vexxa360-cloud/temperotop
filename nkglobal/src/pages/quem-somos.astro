@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import heroImg from '../assets/hero-quem-somos.webp';
+import { hero, paragraphs, highlight, pillars } from '../content/quem-somos';
+---
+<Layout path="/quem-somos" title="Quem Somos" description="A NK Global Services leva o padrão global de governança e precisão para a gestão de facilities e de ativos de alto padrão.">
+  <PageHero title={hero.title} subtitle={hero.subtitle} image={heroImg} imageAlt="Corredor de escritório corporativo" objectPosition="center 55%" />
+  <section class="about">
+    <div class="about__text">
+      {paragraphs.map((p) => <p data-reveal>{p}</p>)}
+      <blockquote data-reveal>{highlight}</blockquote>
+    </div>
+  </section>
+  <section class="pillars">
+    <ul class="container pillars__grid">
+      {pillars.map((p, i) => (
+        <li class="pillar" data-reveal style={`--d:${i * 0.08}s`}>
+          <span class="pillar__icon"><Icon name={p.icon} size={20} /></span>
+          <h2>{p.title}</h2>
+          <p>{p.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>
+<style>
+  .about { background: var(--sand); padding: clamp(3.5rem, 7vw, 5.5rem) var(--gutter); }
+  .about__text { max-width: 580px; margin-inline: auto; display: grid; gap: 1.6rem; font-size: .88rem; line-height: 1.85; color: #5f5f6a; }
+  blockquote { margin: .6rem 0 0; padding-left: 1.1rem; border-left: 2px solid var(--gold); color: var(--ink); font-weight: 500; }
+  .pillars { background: #fff; padding-block: clamp(3rem, 6vw, 4.5rem); }
+  .pillars__grid { list-style: none; margin-block: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; max-width: 1000px; }
+  .pillar { background: var(--sand); border-radius: 6px; padding: 2rem 1.6rem; text-align: center; transition: transform .3s, box-shadow .3s; }
+  .pillar:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(40,34,20,.1); }
+  .pillar__icon { width: 44px; height: 44px; margin: 0 auto 1rem; border-radius: 50%; background: #e8e1d3; color: var(--gold); display: grid; place-items: center; }
+  .pillar h2 { font-size: 1.15rem; margin-bottom: .8rem; }
+  .pillar p { font-size: .8rem; line-height: 1.7; color: #6b6b73; }
+  @media (max-width: 800px) { .pillars__grid { grid-template-columns: 1fr; max-width: 480px; } }
+</style>

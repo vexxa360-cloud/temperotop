@@ -1,0 +1,75 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource/playfair-display/400.css';
+import '@fontsource/playfair-display/600.css';
+import '@fontsource/playfair-display/700.css';
+import '@fontsource/cormorant-garamond/400-italic.css';
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/600.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+
+interface Props { title: string; description: string; path: string }
+const { title, description, path } = Astro.props;
+const fullTitle = path === '/' ? title : `${title} | NK Global Services`;
+const base = Astro.site;
+const abs = (p: string) => (base ? new URL(p, base).href : p);
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2c2c2c" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {base && <link rel="canonical" href={abs(path)} />}
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="NK Global Services" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={abs('/og-image.jpg')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+    <Header />
+    <main id="conteudo"><slot /></main>
+    <Footer />
+    <WhatsAppFloat />
+    <script>
+      import { whatsappLink, WHATSAPP_MESSAGES } from '../config/site';
+
+      // Entrada suave dos elementos marcados com data-reveal
+      const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add('is-visible'));
+      }
+
+      // Formulários: enviam os dados preenchidos para o WhatsApp oficial
+      document.querySelectorAll<HTMLFormElement>('form[data-whatsapp-form]').forEach((form) => {
+        form.addEventListener('submit', (ev) => {
+          ev.preventDefault();
+          if (!form.reportValidity()) return;
+          const d = new FormData(form);
+          const msg = `${WHATSAPP_MESSAGES.diagnostic}\nNome: ${d.get('nome')}\nTelefone: ${d.get('telefone')}\nE-mail: ${d.get('email')}`;
+          const win = window.open(whatsappLink(msg), '_blank', 'noopener,noreferrer');
+          if (!win) window.location.href = whatsappLink(msg);
+        });
+      });
+    </script>
+  </body>
+</html>

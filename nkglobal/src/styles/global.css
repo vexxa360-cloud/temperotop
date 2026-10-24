@@ -1,0 +1,53 @@
+:root {
+  --ink: #0a0a0b;
+  --panel: #151517;
+  --charcoal: #2c2c2c;
+  --charcoal-soft: #363636;
+  --sand: #f4efe8;
+  --paper: #fbfaf6;
+  --gold: #a89968;
+  --gold-bright: #c9a84c;
+  --text-dark: #2c2c2c;
+  --text-muted: #6b6b73;
+  --text-light: #b5b5ba;
+  --whatsapp: #37d673;
+  --whatsapp-solid: #16a34a;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+
+  --header-h: 100px;
+  --header-h-scrolled: 72px;
+  --container: 1200px;
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h-scrolled) + 16px); -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--font-body); color: var(--text-dark); background: var(--sand); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; }
+:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; border-radius: 2px; }
+
+.container { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--gold); color: var(--ink); padding: .6rem 1rem; transition: top .2s; }
+.skip-link:focus { top: 1rem; }
+
+/* Rótulo em monoespaçada, como nos PDFs */
+.eyebrow { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); opacity: .8; }
+
+/* Entrada suave por rolagem (só com JS e sem prefers-reduced-motion) */
+.js [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity .7s ease, transform .7s ease; transition-delay: var(--d, 0s); }
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+}
+@media (max-width: 720px) { :root { --header-h: 76px; --header-h-scrolled: 64px; } }

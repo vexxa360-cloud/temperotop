@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { hero, services } from '../content/servicos';
+---
+<Layout path="/servicos" title="Serviços" description="Ecossistema integrado de excelência em negócios: diagnóstico, riscos e fraudes, treinamento, transição e visão de futuro.">
+  <section class="services">
+    <div class="container">
+      <header class="services__head">
+        <p class="eyebrow">{hero.eyebrow}</p>
+        <h1>{hero.title}</h1>
+        <p class="services__lead">{hero.text}</p>
+      </header>
+      <ul class="services__grid">
+        {services.map((s, i) => (
+          <li class="service" data-reveal style={`--d:${(i % 3) * 0.08}s`}>
+            <span class="service__icon"><Icon name={s.icon} size={20} /></span>
+            <h2>{s.title}</h2>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>
+<style>
+  .services { background: radial-gradient(ellipse at 85% 10%, #1a1a1c 0%, var(--ink) 55%); color: #fff; padding: calc(var(--header-h) + 3rem) 0 clamp(4rem, 8vw, 6.5rem); min-height: 80svh; }
+  .services__head { text-align: center; max-width: 640px; margin: 0 auto 3.5rem; animation: rise .9s ease both; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: .9rem 0 1.1rem; }
+  .services__lead { color: var(--text-light); font-size: .95rem; }
+  .services__grid { list-style: none; margin: 0 auto; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; max-width: 1000px; }
+  .service { background: #141416; border: 1px solid #242427; border-radius: 6px; padding: 1.4rem 1.4rem 1.8rem; transition: transform .3s, border-color .3s; }
+  .service:hover { transform: translateY(-3px); border-color: rgba(168,153,104,.5); }
+  .service__icon { width: 40px; height: 40px; border-radius: 8px; background: #212124; color: var(--gold); display: grid; place-items: center; margin-bottom: 2.4rem; }
+  .service h2 { font-size: 1.15rem; margin-bottom: .7rem; }
+  .service p { font-size: .8rem; line-height: 1.7; color: var(--text-light); }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 900px) { .services__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .services__grid { grid-template-columns: 1fr; } .service__icon { margin-bottom: 1.4rem; } }
+</style>
