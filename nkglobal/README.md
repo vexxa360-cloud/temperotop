@@ -12,3 +12,5 @@ Astro (estático) · 4 páginas: `/`, `/quem-somos`, `/servicos`, `/diferenciais
 cd nkglobal && npm install && npm run dev   # desenvolvimento
 npm run build                                # gera dist/
 ```
+
+> Deploy: o push na `main` dispara o build automático na Cloudflare.
