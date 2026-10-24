@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rango Loader — demonstração</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../src/rango-loader.css">
+<style>
+  :root { color-scheme: light dark; }
+  html, body { margin: 0; height: 100%; background: #021323; font-family: Inter, system-ui, sans-serif; }
+  .app { position: fixed; inset: 0; display: grid; place-items: start center; background: #021323; overflow: hidden; }
+  .app img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .tabs { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 6px; padding: 8px; background: rgba(2, 19, 35, .92); overflow-x: auto; z-index: 5; }
+  .tabs button, .ctl button { font: 600 12px Inter, system-ui, sans-serif; border: 1px solid #8cc8ff55; background: #0a2a5c; color: #dcecff; border-radius: 8px; padding: 8px 10px; cursor: pointer; white-space: nowrap; }
+  .ctl { position: fixed; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 6px; z-index: 5; max-width: 190px; }
+  .err { position: fixed; inset: auto 12px 64px 12px; background: #fff; color: #0a1e4a; border-radius: 12px; padding: 12px 14px; font: 600 14px Inter, system-ui, sans-serif; box-shadow: 0 8px 28px rgba(0,0,0,.35); z-index: 4; display: none; }
+  .pill { position: fixed; left: 50%; transform: translateX(-50%); bottom: 26px; z-index: 5; white-space: nowrap; padding: 6px 12px; border-radius: 99px; background: rgba(2, 19, 35, .78); color: #dcecff; border: 1px solid #8cc8ff66; font: 700 12px Inter, system-ui, sans-serif; letter-spacing: .04em; display: none; }
+  .btn-local { position: fixed; left: 50%; bottom: 74px; transform: translateX(-50%); z-index: 5; background: #1560e5; color: #fff; border: 0; border-radius: 10px; padding: 10px 16px; font: 700 13px Inter, system-ui, sans-serif; display: none; align-items: center; gap: 10px; }
+  body.capture .tabs, body.capture .ctl { display: none; }
+  /* modo aparelho: iPhone 17 Pro Max (moldura extraida da imagem de referencia) sobre fundo azul */
+  body.phone .stage-bg { position: fixed; inset: 0; background: linear-gradient(165deg, #06235f 0%, #0b45b8 38%, #1560e5 62%, #0a2f86 100%); overflow: hidden; display: block; }
+  body.phone .stage-bg::before, body.phone .stage-bg::after { content: ""; position: absolute; width: 150%; height: 38%; left: -25%; background: linear-gradient(90deg, transparent, rgba(120, 190, 255, .20), transparent); border-radius: 50%; animation: drift 9s ease-in-out infinite alternate; }
+  body.phone .stage-bg::before { top: 18%; transform: rotate(-24deg); } body.phone .stage-bg::after { top: 56%; transform: rotate(-18deg); animation-delay: -4s; opacity: .7; }
+  @keyframes drift { from { translate: -4% 0; } to { translate: 4% 0; } }
+  body.phone .app { display: none; }
+  .phone-wrap { display: none; }
+  body.phone .phone-wrap { display: block; position: fixed; inset: 0; z-index: 3; }
+  .phone-wrap .frame { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 6; filter: drop-shadow(0 26px 30px rgba(0, 8, 40, .55)); }
+  .phone-wrap .screen { position: absolute; left: 19.130%; top: 10.048%; width: 61.637%; height: 78.349%; border-radius: 8.6vw; overflow: hidden; background: #f1f5fb; --rl-inset-top: 6.3%; container-type: size; }
+  .phone-wrap .screen img { position: absolute; left: 0; top: 6.3%; width: 100%; height: auto; display: block; }
+  .phone-wrap .sb { position: absolute; left: 0; right: 0; top: 0; height: 6.3%; z-index: 4; display: flex; align-items: center; justify-content: space-between; padding: 0 9%; color: #fff; mix-blend-mode: difference; font: 700 3.5cqw Inter, sans-serif; pointer-events: none; }
+  .phone-wrap .sb i { display: inline-block; width: 5cqw; height: 2.6cqw; border: .35cqw solid #fff; border-radius: .9cqw; position: relative; } .phone-wrap .sb i::after { content: ""; position: absolute; inset: .35cqw; background: #fff; border-radius: .4cqw; }
+  body.phone .btn-local { position: absolute; bottom: 8%; z-index: 2; }
+  body.capture .pill { display: block; }
+</style>
+</head>
+<body>
+<div class="stage-bg"></div>
+<div class="phone-wrap"><div class="screen" id="phoneScreen"><img id="screenP" alt="Tela do Rango (demonstração)" src="./screens/dashboard.jpg"><div class="sb"><span>9:41</span><i></i></div></div><img class="frame" src="../assets/iphone_frame.png" alt=""></div>
+<div class="app"><img id="screen" alt="Tela do Rango (demonstração)" src="./screens/dashboard.jpg"></div>
+<div class="pill" id="pill"></div>
+<div class="err" id="err" role="alert"></div>
+<button class="btn-local" id="btnLocal">Atualizar</button>
+<div class="ctl">
+  <button data-act="boot-fast">Início rápido (150 ms)</button>
+  <button data-act="boot-slow">Início lento (4 s)</button>
+  <button data-act="boot-error">Falha de rede</button>
+  <button data-act="boot-expired">Sessão expirada</button>
+  <button data-act="auth">Autenticação</button>
+  <button data-act="local">Carregamento local</button>
+  <button data-act="theme">Alternar tema</button>
+</div>
+<div class="tabs">
+  <button data-nav="dashboard">Dashboard</button><button data-nav="lancar-venda">Lançar Venda</button>
+  <button data-nav="pedidos">Pedidos / Delivery</button><button data-nav="relatorios">Relatórios</button>
+</div>
+<script type="module">
+  import { createRangoLoader } from '../src/rango-loader.js';
+  const q = new URLSearchParams(location.search);
+  const $ = (s) => document.querySelector(s);
+  let theme = q.get('theme') || 'auto';
+  if (q.has('capture')) document.body.classList.add('capture');
+  const PHONE = q.has('phone'); if (PHONE) { document.body.classList.add('phone'); document.querySelector('.stage-bg').style.display = 'block'; $('#btnLocal').remove(); $('#phoneScreen').appendChild(Object.assign(document.createElement('button'), { id: 'btnLocal', className: 'btn-local', textContent: 'Atualizar' })); }
+  const where = () => (PHONE ? { container: $('#phoneScreen') } : {});
+  const sleep = (ms, v, fail) => new Promise((res, rej) => setTimeout(() => (fail ? rej(fail) : res(v)), ms));
+  const manual = () => { let resolve, reject; const p = new Promise((a, b) => { resolve = a; reject = b; }); p.catch(() => {}); return { p, resolve, reject }; };
+  const showError = (msg) => { const e = $('#err'); e.textContent = msg; e.style.display = 'block'; };
+  const clearError = () => { $('#err').style.display = 'none'; };
+  const setScreen = (name) => { $('#screen').src = `./screens/${name}.jpg`; $('#screenP').src = `./screens/${name}.jpg`; };
+  const setPill = (t) => { $('#pill').textContent = t; };
+
+  /** Carregamento inicial: o app monta por baixo; o loader so sai quando os requisitos ESSENCIAIS resolvem. */
+  function boot({ delay = 800, fail = null, essential = null, appearAfter } = {}) {
+    clearError(); setScreen('dashboard');
+    const loader = createRangoLoader({ mode: 'initial', theme, appearAfter, ...where() });
+    loader.on('error', (e) => showError(e.detail.error?.message || 'Erro ao carregar. Tente novamente.'));
+    const req = essential || sleep(delay, 'ok', fail && new Error(fail));
+    loader.start(); loader.whenReady([req]).catch(() => {});
+    return loader;
+  }
+  function auth({ delay = 1200, essential = null } = {}) {
+    const loader = createRangoLoader({ mode: 'auth', theme, ...where() }); const req = essential || sleep(delay);
+    loader.start(); loader.whenReady([req]).catch(() => {}); return loader;
+  }
+  function nav(name, { delay = 900, appearAfter, essential = null } = {}) {
+    const loader = createRangoLoader({ mode: 'page', theme, appearAfter, ...where() });
+    const req = essential || sleep(delay);
+    loader.track(req).then(() => setScreen(name)).catch(() => {}); return loader;
+  }
+  function local({ delay = 1000, essential = null } = {}) {
+    const loader = createRangoLoader({ mode: 'local', theme, target: $('#btnLocal'), appearAfter: 0 });
+    $('#btnLocal').style.display = 'inline-flex'; loader.track(essential || sleep(delay)); return loader;
+  }
+
+  window.demo = { createRangoLoader, boot, auth, nav, local, manual, sleep, setScreen, setPill, showError, setTheme: (t) => { theme = t; } };
+
+  // quadro a quadro (somente para gerar o video / capturas): pausa e posiciona todas as animacoes CSS
+  const starts = new WeakMap();
+  window.__step = (f, fps = 30) => {
+    for (const a of document.getAnimations()) {
+      if (!starts.has(a)) starts.set(a, f);
+      a.pause(); a.currentTime = (f - starts.get(a)) * 1000 / fps;
+      if (/^rl-(exit|bar-out)$/.test(a.animationName || '') && a.effect.getComputedTiming().progress >= 1) a.finish();
+    }
+  };
+
+  document.querySelectorAll('[data-nav]').forEach((b) => b.addEventListener('click', () => nav(b.dataset.nav)));
+  document.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
+    const a = b.dataset.act;
+    if (a === 'boot-fast') boot({ delay: 150 }); else if (a === 'boot-slow') boot({ delay: 4000 });
+    else if (a === 'boot-error') boot({ delay: 900, fail: 'Falha de rede. Verifique sua conexão e tente novamente.' });
+    else if (a === 'boot-expired') boot({ delay: 700, fail: 'Sessão expirada. Entre novamente.' });
+    else if (a === 'auth') auth(); else if (a === 'local') local();
+    else if (a === 'theme') { theme = theme === 'dark' ? 'light' : 'dark'; }
+  }));
+  if (!q.has('manual')) boot({ delay: Number(q.get('delay') || 1200) });
+  window.__ready = true;
+</script>
+</body>
+</html>

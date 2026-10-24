@@ -1,0 +1,132 @@
+/* Rango Loader — estilos. Apenas transform/opacity nas animações. Estado final = estilo base,
+   portanto "movimento reduzido" (animation:none) mostra a composição estática automaticamente. */
+.rl-root, .rl-bar, .rl-local {
+  --rl-blue: #1560e5; --rl-navy: #021323; --rl-ice: #dcecff; --rl-sky: #8cc8ff;
+  --rl-logo-url: url("../assets/logo_rango.png");
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.rl-root[data-rl-theme="dark"], .rl-bar[data-rl-theme="dark"], .rl-local[data-rl-theme="dark"] {
+  --rl-bg: #021323; --rl-glow: rgba(21, 96, 229, .42); --rl-logo: #ffffff; --rl-text: #dcecff;
+  --rl-card: rgba(255, 255, 255, .07); --rl-card-border: rgba(140, 200, 255, .38); --rl-card-shadow: none;
+  --rl-ink: #ffffff; --rl-skel: rgba(220, 236, 255, .30); --rl-line: #8cc8ff; --rl-accent: #4d9bff;
+}
+.rl-root[data-rl-theme="light"], .rl-bar[data-rl-theme="light"], .rl-local[data-rl-theme="light"] {
+  --rl-bg: #ffffff; --rl-glow: rgba(21, 96, 229, .14); --rl-logo: #1560e5; --rl-text: #0a1e4a;
+  --rl-card: #ffffff; --rl-card-border: #cfe2ff; --rl-card-shadow: 0 10px 28px rgba(10, 30, 74, .12);
+  --rl-ink: #0a1e4a; --rl-skel: #dcecff; --rl-line: #1560e5; --rl-accent: #1560e5;
+}
+
+/* ---------- carregamento inicial / autenticacao ---------- */
+.rl-root {
+  position: fixed; inset: 0; z-index: var(--rl-z, 2147483000); display: grid; place-items: center;
+  background: var(--rl-bg); overflow: hidden; contain: layout paint; animation: rl-bg-in 260ms ease-out both;
+}
+.rl-root.rl-exit { pointer-events: none; animation: rl-exit 240ms cubic-bezier(.4, 0, 1, 1) forwards; }
+.rl-persp { perspective: 900px; width: 100%; height: 100%; display: grid; place-items: center; }
+.rl-stage {
+  --s: clamp(260px, min(88vw, 58vh), 720px); --R: calc(var(--s) * .40);
+  position: relative; width: var(--s); height: var(--s); transform-style: preserve-3d;
+}
+.rl-glow {
+  position: absolute; left: 50%; top: 50%; width: calc(var(--s) * 1.15); height: calc(var(--s) * 1.15);
+  margin: calc(var(--s) * -.575) 0 0 calc(var(--s) * -.575); border-radius: 50%;
+  background: radial-gradient(closest-side, var(--rl-glow), transparent); opacity: .9;
+  animation: rl-glow 2.6s ease-in-out 1.1s infinite alternate;
+}
+.rl-logo {
+  position: absolute; left: 50%; top: 50%; width: calc(var(--s) * .34); aspect-ratio: 903 / 414;
+  margin: calc(var(--s) * -.078) 0 0 calc(var(--s) * -.17);
+  background: var(--rl-logo); -webkit-mask: var(--rl-logo-url) center / contain no-repeat; mask: var(--rl-logo-url) center / contain no-repeat;
+  animation: rl-logo-in 640ms cubic-bezier(.16, 1, .3, 1) 520ms both;
+}
+.rl-card {
+  --w: calc(var(--s) * .27); --h: calc(var(--s) * .17);
+  position: absolute; left: 50%; top: 50%; width: var(--w); height: var(--h); margin: calc(var(--h) / -2) 0 0 calc(var(--w) / -2);
+  transform: translate3d(calc(var(--ax) * var(--R)), calc(var(--ay) * var(--R)), 0);
+  animation: rl-card-in 760ms cubic-bezier(.16, 1, .3, 1) calc(120ms + var(--i) * 70ms) both;
+}
+.rl-card-in {
+  width: 100%; height: 100%; box-sizing: border-box; padding: calc(var(--s) * .018); border-radius: calc(var(--s) * .035);
+  background: var(--rl-card); border: 1px solid var(--rl-card-border); box-shadow: var(--rl-card-shadow);
+  display: flex; flex-direction: column; justify-content: space-between; color: var(--rl-accent);
+  animation: rl-float 3.2s ease-in-out calc(1.8s + var(--i) * 120ms) infinite alternate;
+}
+.rl-card-top { display: flex; align-items: center; gap: calc(var(--s) * .012); }
+.rl-card-top svg { width: calc(var(--s) * .05); height: calc(var(--s) * .05); flex: none; }
+.rl-card-top b { font-size: calc(var(--s) * .028); letter-spacing: .06em; color: var(--rl-ink); font-weight: 800; }
+.rl-skel { height: calc(var(--s) * .012); border-radius: 99px; background: var(--rl-skel); }
+.rl-skel + .rl-skel { width: 62%; margin-top: calc(var(--s) * .01); }
+.rl-line {
+  position: absolute; left: 50%; top: 50%; width: calc(var(--s) * .12); height: 2px; margin-top: -1px; transform-origin: 0 50%;
+  transform: rotate(var(--rot)) translateX(calc(var(--s) * .185)) scaleX(1);
+  background: linear-gradient(90deg, transparent, var(--rl-line)); opacity: .75;
+  animation: rl-line-in 520ms cubic-bezier(.2, .8, .2, 1) calc(560ms + var(--i) * 70ms) both;
+}
+.rl-dot {
+  position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--rl-line);
+  transform: rotate(var(--rot)) translateX(calc(var(--s) * .30)); opacity: 0;
+  animation: rl-dot 1.9s ease-in-out calc(1.7s + var(--i) * 260ms) infinite;
+}
+.rl-tag {
+  position: absolute; left: 50%; top: calc(50% + var(--s) * .50); transform: translateX(-50%); white-space: nowrap;
+  font-size: clamp(13px, calc(var(--s) * .046), 22px); font-weight: 600; color: var(--rl-text); letter-spacing: .01em;
+  animation: rl-tag-in 480ms ease-out 1.05s both;
+}
+.rl-wait {
+  position: absolute; left: 50%; top: calc(50% + var(--s) * .585); width: calc(var(--s) * .26); height: 3px; margin-left: calc(var(--s) * -.13);
+  border-radius: 99px; background: var(--rl-skel); overflow: hidden; animation: rl-tag-in 400ms ease-out 1.3s both;
+}
+.rl-wait i { position: absolute; inset: 0; width: 40%; border-radius: 99px; background: var(--rl-accent); animation: rl-wait 1.15s cubic-bezier(.4, 0, .2, 1) 1.3s infinite; }
+.rl-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* autenticacao: versao simplificada (sem cards, conexoes e frase) */
+.rl-root.rl-auth .rl-card, .rl-root.rl-auth .rl-line, .rl-root.rl-auth .rl-dot, .rl-root.rl-auth .rl-tag { display: none; }
+.rl-root.rl-auth .rl-logo { animation-delay: 80ms; }
+.rl-root.rl-auth .rl-glow { animation-delay: .3s; }
+.rl-root.rl-auth .rl-wait { top: calc(50% + var(--s) * .20); animation-delay: .5s; }
+.rl-root.rl-auth .rl-wait i { animation-delay: .5s; }
+
+/* modo contido: o loader ocupa apenas o container (unidades de container no lugar de vw/vh) */
+.rl-root.rl-contained { position: absolute; container-type: size; z-index: var(--rl-z, 3); }
+.rl-root.rl-contained .rl-stage { --s: clamp(200px, min(88cqw, 58cqh), 720px); }
+.rl-bar.rl-contained { position: absolute; top: var(--rl-inset-top, 0); z-index: var(--rl-z, 3); }
+
+/* ---------- carregamento de pagina: barra fina, nao bloqueia ---------- */
+.rl-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: var(--rl-z, 2147483000); pointer-events: none; overflow: hidden; animation: rl-bar-in 140ms ease-out both; }
+.rl-bar.rl-exit { animation: rl-bar-out 180ms ease-in forwards; }
+.rl-bar i { position: absolute; top: 0; left: 0; height: 100%; width: 38%; border-radius: 0 3px 3px 0; background: var(--rl-accent); animation: rl-bar 1.1s cubic-bezier(.4, 0, .2, 1) infinite; }
+
+/* ---------- carregamento local: indicador inline ---------- */
+.rl-local { display: inline-flex; align-items: center; gap: 5px; vertical-align: middle; animation: rl-bar-in 140ms ease-out both; }
+.rl-local.rl-exit { animation: rl-bar-out 140ms ease-in forwards; }
+.rl-local i { width: 6px; height: 6px; border-radius: 50%; background: var(--rl-accent); animation: rl-pulse 900ms ease-in-out infinite; }
+.rl-local i:nth-child(2) { animation-delay: 150ms; } .rl-local i:nth-child(3) { animation-delay: 300ms; }
+
+@keyframes rl-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rl-exit { to { opacity: 0; transform: scale(1.015); } }
+@keyframes rl-glow { from { opacity: .55; transform: scale(.96); } to { opacity: 1; transform: scale(1.04); } }
+@keyframes rl-logo-in { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(.94); } to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } }
+@keyframes rl-card-in {
+  0% { opacity: 0; transform: translate3d(calc(var(--ax) * var(--R) * 2.4), calc(var(--ay) * var(--R) * 2.4), -900px) scale(.7); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(calc(var(--ax) * var(--R)), calc(var(--ay) * var(--R)), 0) scale(1); }
+}
+@keyframes rl-float { from { transform: translate3d(0, -2px, 0); } to { transform: translate3d(0, 3px, 0); } }
+@keyframes rl-line-in { from { opacity: 0; transform: rotate(var(--rot)) translateX(calc(var(--s) * .185)) scaleX(0); } to { opacity: .75; transform: rotate(var(--rot)) translateX(calc(var(--s) * .185)) scaleX(1); } }
+@keyframes rl-dot { 0% { opacity: 0; transform: rotate(var(--rot)) translateX(calc(var(--s) * .185)); } 25% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--rot)) translateX(calc(var(--s) * .30)); } }
+@keyframes rl-tag-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes rl-wait { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+@keyframes rl-bar { from { transform: translateX(-100%); } to { transform: translateX(270%); } }
+@keyframes rl-bar-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rl-bar-out { to { opacity: 0; } }
+@keyframes rl-pulse { 0%, 100% { transform: scale(.6); opacity: .5; } 50% { transform: scale(1); opacity: 1; } }
+
+/* ---------- movimento reduzido: composicao estatica, sem animacao ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .rl-root, .rl-root *, .rl-bar, .rl-bar *, .rl-local, .rl-local * { animation: none !important; }
+  .rl-dot { display: none; }
+  .rl-wait i { width: 100%; opacity: .55; }
+  .rl-bar i { width: 100%; opacity: .6; }
+}
+.rl-reduced, .rl-reduced *, .rl-bar.rl-reduced, .rl-bar.rl-reduced *, .rl-local.rl-reduced, .rl-local.rl-reduced * { animation: none !important; }
+.rl-reduced .rl-dot { display: none; } .rl-reduced .rl-wait i { width: 100%; opacity: .55; } .rl-bar.rl-reduced i { width: 100%; opacity: .6; }
