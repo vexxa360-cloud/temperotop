@@ -39,6 +39,9 @@ export const SITE = {
   copyright: '© 2026 NK GLOBAL Services. Todos os direitos reservados.',
 };
 
+/** Rota no Google Maps até o escritório; sem origem definida, o Maps usa a localização de quem clicou. */
+export const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(SITE.address.join(', '))}`;
+
 export const NAV = [
   { label: 'Página Principal', href: '/' },
   { label: 'Quem Somos', href: '/quem-somos' },

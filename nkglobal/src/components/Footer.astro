@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { SITE, SOCIAL, LEGAL, WHATSAPP_DISPLAY, whatsappLink, WHATSAPP_MESSAGES } from '../config/site';
+import { SITE, SOCIAL, LEGAL, MAPS_DIRECTIONS_URL, WHATSAPP_DISPLAY, whatsappLink, WHATSAPP_MESSAGES } from '../config/site';
 const social = SOCIAL.filter((s) => s.href);
 ---
 <footer class="footer">
@@ -20,7 +20,7 @@ const social = SOCIAL.filter((s) => s.href);
     <div>
       <h2 class="footer__title">Nosso Endereço</h2>
       <ul class="footer__list">
-        <li><Icon name="map-pin" size={16} /><address>{SITE.address.map((l) => <span>{l}</span>)}</address></li>
+        <li><Icon name="map-pin" size={16} /><a class="footer__address" href={MAPS_DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" aria-label="Ver rota até o endereço no Google Maps"><address>{SITE.address.map((l) => <span>{l}</span>)}</address></a></li>
         <li><Icon name="message-circle" size={16} /><a href={whatsappLink(WHATSAPP_MESSAGES.contact)} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></li>
       </ul>
     </div>
@@ -53,7 +53,8 @@ const social = SOCIAL.filter((s) => s.href);
   .footer__list :global(svg) { color: var(--gold); flex: none; margin-top: 2px; }
   .footer__list a { text-decoration: none; transition: color .2s; overflow-wrap: anywhere; }
   .footer__list a:hover { color: var(--gold); }
-  address { font-style: normal; display: grid; line-height: 1.6; }
+  .footer__address { color: inherit; }
+  address { font-style: normal; cursor: pointer; display: grid; line-height: 1.6; }
   .footer__social { list-style: none; margin: 0; padding: 0; display: flex; gap: .7rem; }
   .footer__social a { width: 36px; height: 36px; border-radius: 50%; background: #3a3a3b; color: #fff; display: grid; place-items: center; transition: background .2s, color .2s; }
   .footer__social a:hover { background: var(--gold); color: var(--ink); }
