@@ -35,3 +35,17 @@ Para ver quadros isolados: `python3 -I anuncio.py x.mp4 frames 12 40 75` (gera `
 - Não há endereço, telefone ou canal oficial do Rango no projeto; por isso o CTA diz apenas "CONHEÇA O RANGO". Quando houver um canal confirmado, é só incluí-lo na cena 8 (`scene8`).
 - Não havia filmagem de um estabelecimento; a cena 1 usa uma ilustração em motion graphics.
 - O repositório só contém a landing page TemperoTop (outra marca); nada dela foi usado.
+
+---
+
+# Versão no mockup de iPhone (`rango_iphone_80s.mp4`)
+
+Recriação do comercial acima no molde do iPhone da imagem de referência (`assets/referencia_iphone.webp`): 1080×1920 (9:16), 30 fps, 80,0 s, **sem faixa de áudio, sem legendas, títulos, slogans, botões ou textos externos**.
+
+- **Vídeo-fonte:** não havia outro vídeo no projeto; a linha do tempo, as telas, os cortes, as rolagens, as janelas e o zoom vêm do comercial `rango_anuncio_80s.mp4` (mesmo código, `anuncio.py`). Só mudou a composição: o aparelho, o fundo e a retirada dos textos.
+- **Aparelho:** a própria imagem de referência serve de molde (moldura metálica, Dynamic Island, barra de status e indicador de início); a tela é substituída pelo conteúdo real, com cantos arredondados no limite interno do display. O aparelho ocupa ~67% da largura e fica na mesma posição em todas as cenas.
+- **Fundo:** azul-marinho com curvas diagonais e linhas luminosas, em movimento lento (`bg_key` em `anuncio_iphone.py`).
+- **Abertura e final:** logo e papéis como no vídeo-fonte; no encerramento só a logo, sobre o fundo azul.
+- **Reproduzir:** `python3 -I anuncio_iphone.py rango_iphone_80s.mp4` (precisa de ffmpeg, numpy e Pillow).
+
+Limitações: a tela do iPhone é mais alta que a do app original, então o app ocupa a largura inteira e a faixa inferior prolonga a cor da página (o conteúdo continua além da área visível). O botão vermelho "Cancelar pedido" é parte da interface real e foi mantido.
