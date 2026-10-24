@@ -14,3 +14,5 @@ npm run build                                # gera dist/
 ```
 
 > Deploy: o push na `main` dispara o build automático na Cloudflare.
+
+Build automático ativo (watch path nkglobal/**).
