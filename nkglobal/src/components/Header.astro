@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-nk-global.png';
+import Button from './Button.astro';
+import { NAV } from '../config/site';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path === `${href}.html` || (href === '/' && path === '/index.html');
+---
+<header class="site-header" data-header>
+  <div class="site-header__bar container">
+    <a class="site-header__logo" href="/" aria-label="NK Global Services — página principal">
+      <Image src={logo} alt="NK Global Services" height={120} widths={[160, 240]} sizes="120px" loading="eager" fetchpriority="high" />
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Principal" data-nav>
+      <ul>
+        {NAV.map((item) => (
+          <li><a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+      <Button variant="outline" size="sm" whatsapp="contact" class="site-nav__cta">Fale Conosco</Button>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .site-header { position: fixed; inset: 0 0 auto 0; z-index: 50; background: rgba(44, 44, 44, .55); transition: background-color .35s, box-shadow .35s, backdrop-filter .35s; }
+  .site-header.is-scrolled { background: rgba(32, 32, 33, .92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 6px 24px rgba(0, 0, 0, .28); }
+  .site-header__bar { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); transition: height .35s ease; }
+  .is-scrolled .site-header__bar { height: var(--header-h-scrolled); }
+  .site-header__logo { display: block; flex: none; }
+  .site-header__logo img { height: 76px; width: auto; transition: height .35s ease; }
+  .is-scrolled .site-header__logo img { height: 58px; }
+  .site-nav { display: flex; align-items: center; gap: 2rem; }
+  .site-nav ul { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
+  .site-nav li a { display: inline-block; padding: .4rem 0; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; color: #fff; border-bottom: 1px solid transparent; transition: color .25s, border-color .25s; }
+  .site-nav li a:hover, .site-nav li a[aria-current='page'] { color: var(--gold); border-color: var(--gold); }
+  .menu-toggle { display: none; width: 44px; height: 44px; background: none; border: 0; cursor: pointer; padding: 0; flex-direction: column; justify-content: center; align-items: center; gap: 6px; }
+  .menu-toggle span { width: 24px; height: 2px; background: #fff; transition: transform .3s, opacity .3s; }
+  .menu-toggle[aria-expanded='true'] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .menu-toggle[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  .menu-toggle[aria-expanded='true'] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  @media (max-width: 900px) {
+    .site-header__logo img { height: 60px; }
+    .is-scrolled .site-header__logo img { height: 50px; }
+    .menu-toggle { display: flex; }
+    .site-nav { position: fixed; inset: 0; background: rgba(14, 14, 15, .97); flex-direction: column; justify-content: center; gap: 2.2rem; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; z-index: -1; }
+    .site-nav.is-open { opacity: 1; visibility: visible; }
+    .site-nav ul { flex-direction: column; align-items: center; gap: 1.4rem; }
+    .site-nav li a { font-size: .95rem; padding: .6rem 1rem; }
+    .menu-toggle { position: relative; z-index: 2; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    nav?.classList.toggle('is-open', open);
+    toggle?.setAttribute('aria-expanded', String(open));
+    toggle?.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  window.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+  window.matchMedia('(min-width: 901px)').addEventListener('change', () => setOpen(false));
+</script>

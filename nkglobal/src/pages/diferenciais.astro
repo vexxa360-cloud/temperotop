@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import DiagnosticForm from '../components/DiagnosticForm.astro';
+import heroImg from '../assets/hero-diferenciais.webp';
+import { hero, methodology, diagnostic, result } from '../content/diferenciais';
+---
+<Layout path="/diferenciais" title="Diferenciais" description="Compliance total, equilíbrio, precisão e negócios de alta performance: os fundamentos da NK Global. Solicite um diagnóstico pelo WhatsApp.">
+  <PageHero title="Diferenciais NK Global" subtitle={hero.subtitle} image={heroImg} imageAlt="Escritório corporativo moderno com equipe trabalhando" objectPosition="center 30%" minHeight="480px" />
+
+  <section class="method">
+    <div class="container">
+      <header class="method__head" data-reveal>
+        <p class="eyebrow">{methodology.eyebrow}</p>
+        <h2>{methodology.title}</h2>
+      </header>
+      <ul class="method__grid">
+        {methodology.items.map((it, i) => (
+          <li class="method__card" data-reveal style={`--d:${(i % 2) * 0.08}s`}>
+            <span class="method__icon"><Icon name={it.icon} size={26} /></span>
+            <h3>{it.title}</h3>
+            <p>{it.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="next" id="diagnostico">
+    <div class="next__card container" data-reveal>
+      <div class="next__intro">
+        <p class="eyebrow">{diagnostic.eyebrow}</p>
+        <h2>Solicitar um<br />Diagnóstico</h2>
+        <p class="next__text">{diagnostic.text}</p>
+        <ul class="next__bullets">{diagnostic.bullets.map((b) => <li>{b}</li>)}</ul>
+      </div>
+      <div class="next__form">
+        <DiagnosticForm id="dif" phonePlaceholder="(11) 99999-9999" submit={diagnostic.submit} variant="whatsapp">
+          <Icon slot="icon" name="message-circle" size={16} />
+          <p class="next__note">{diagnostic.note}</p>
+        </DiagnosticForm>
+      </div>
+    </div>
+  </section>
+
+  <section class="result">
+    <div class="result__inner" data-reveal>
+      <h2>{result.title}</h2>
+      <p>{result.text}</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .method { background: var(--charcoal); color: #fff; padding-block: clamp(4rem, 8vw, 6rem); }
+  .method__head { text-align: center; max-width: 560px; margin: 0 auto 3rem; }
+  .method__head h2 { font-size: clamp(1.7rem, 3.6vw, 2.3rem); margin-top: .9rem; }
+  .method__grid { list-style: none; margin: 0 auto; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; max-width: 640px; }
+  .method__card { background: var(--charcoal-soft); border: 1px solid #484848; border-radius: 6px; padding: 2rem 1.6rem; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,.18); transition: transform .3s, border-color .3s; }
+  .method__card:hover { transform: translateY(-3px); border-color: rgba(168,153,104,.6); }
+  .method__icon { width: 56px; height: 56px; margin: 0 auto 1.1rem; border-radius: 50%; background: rgba(168,153,104,.12); color: var(--gold); display: grid; place-items: center; }
+  .method__card h3 { font-size: 1.05rem; margin-bottom: .7rem; }
+  .method__card p { font-size: .8rem; line-height: 1.7; color: var(--text-light); }
+
+  .next { background: #fcfcfd; padding-block: clamp(4rem, 8vw, 6rem) 2rem; }
+  .next__card { display: grid; grid-template-columns: 1fr 1fr; max-width: 900px; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(30,30,40,.18); background: #fff; }
+  .next__intro { background: var(--charcoal) linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 100% 40px; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 40px 40px; color: #fff; padding: 2.8rem 2.5rem; }
+  .next__intro h2 { font-size: clamp(1.7rem, 3.4vw, 2.1rem); margin: .8rem 0 1.2rem; }
+  .next__text { font-size: .85rem; line-height: 1.75; color: var(--text-light); }
+  .next__bullets { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; gap: .8rem; font-size: .8rem; }
+  .next__bullets li { display: flex; align-items: center; gap: .7rem; }
+  .next__bullets li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex: none; }
+  .next__form { padding: 2.4rem 2.2rem; }
+  .next__note { text-align: center; font-size: .66rem; color: #9a9aa3; }
+
+  .result { background: #fcfcfd; padding: clamp(3rem, 7vw, 5rem) var(--gutter) clamp(4rem, 8vw, 6rem); }
+  .result__inner { max-width: 600px; margin-inline: auto; text-align: center; }
+  .result h2 { font-size: clamp(1.3rem, 3vw, 1.6rem); margin-bottom: 1rem; }
+  .result p { font-size: .88rem; line-height: 1.85; color: #55555f; }
+
+  @media (max-width: 800px) {
+    .next__card { grid-template-columns: 1fr; border-radius: 14px; }
+    .next__intro { padding: 2rem 1.5rem; }
+    .next__form { padding: 1.8rem 1.4rem; }
+  }
+  @media (max-width: 520px) { .method__grid { grid-template-columns: 1fr; } }
+</style>

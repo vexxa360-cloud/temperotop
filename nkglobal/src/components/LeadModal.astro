@@ -1,0 +1,97 @@
+---
+import Icon from './Icon.astro';
+import Button from './Button.astro';
+---
+<dialog class="lead" id="lead-modal" aria-labelledby="lead-title" aria-describedby="lead-desc">
+  <form class="lead__form" method="dialog" novalidate data-lead-form>
+    <button class="lead__close" type="button" aria-label="Fechar" data-lead-close><Icon name="x" size={20} /></button>
+    <p class="eyebrow">Atendimento via WhatsApp</p>
+    <h2 id="lead-title">Solicitar diagnóstico</h2>
+    <p id="lead-desc" class="lead__desc">Informe seus dados e continue a conversa com a NK Global no WhatsApp.</p>
+    <div class="lead__field">
+      <label for="lead-nome">Nome completo</label>
+      <input id="lead-nome" name="nome" type="text" autocomplete="name" placeholder="Seu nome" required />
+    </div>
+    <div class="lead__field">
+      <label for="lead-tel">Telefone</label>
+      <input id="lead-tel" name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" required />
+    </div>
+    <div class="lead__field">
+      <label for="lead-email">E-mail</label>
+      <input id="lead-email" name="email" type="email" autocomplete="email" placeholder="seu@email.com" required />
+    </div>
+    <p class="lead__error" role="alert" data-lead-error hidden></p>
+    <Button type="submit" variant="whatsapp" class="lead__submit"><Icon name="message-circle" size={16} />Continuar no WhatsApp</Button>
+    <p class="lead__note">Você será redirecionado para o WhatsApp da NK Global.</p>
+  </form>
+</dialog>
+
+<style>
+  .lead { border: 0; padding: 0; border-radius: 14px; width: min(440px, calc(100% - 2rem)); background: #fff; color: var(--ink); box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  .lead::backdrop { background: rgba(10,10,11,.7); backdrop-filter: blur(3px); }
+  .lead[open] { animation: lead-in .25s ease both; }
+  .lead__form { position: relative; display: grid; gap: 1rem; padding: 2.2rem 2rem 1.8rem; }
+  .lead__close { position: absolute; top: .6rem; right: .6rem; width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; border-radius: 50%; cursor: pointer; color: #6b6b73; transition: background .2s; }
+  .lead__close:hover { background: var(--sand); }
+  h2 { font-size: 1.6rem; margin-top: -.4rem; }
+  .lead__desc { font-size: .85rem; color: #55555f; line-height: 1.6; margin-top: -.3rem; }
+  .lead__field { display: grid; gap: .4rem; }
+  label { font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  input { font: inherit; font-size: .95rem; background: var(--sand); border: 1px solid #e4dfd6; border-radius: 4px; padding: .85rem 1rem; min-height: 48px; width: 100%; }
+  input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(168,153,104,.25); background: #fff; }
+  input[aria-invalid='true'] { border-color: #c0392b; }
+  .lead__error { font-size: .78rem; color: #b3261e; }
+  .lead :global(.lead__submit) { width: 100%; letter-spacing: .06em; font-size: .74rem; white-space: nowrap; }
+  .lead__note { text-align: center; font-size: .68rem; color: #8d8d95; }
+  @keyframes lead-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+</style>
+
+<script>
+  import { diagnosticMessage, openWhatsApp } from '../config/site';
+
+  const dialog = document.querySelector<HTMLDialogElement>('#lead-modal')!;
+  const form = dialog.querySelector<HTMLFormElement>('[data-lead-form]')!;
+  const errorBox = dialog.querySelector<HTMLElement>('[data-lead-error]')!;
+  let opener: HTMLElement | null = null;
+
+  const open = (from: HTMLElement) => {
+    opener = from;
+    errorBox.hidden = true;
+    dialog.showModal();
+    dialog.querySelector<HTMLInputElement>('#lead-nome')?.focus();
+  };
+  const close = () => { dialog.close(); opener?.focus(); };
+
+  // Qualquer link para o WhatsApp da empresa abre o pop-up antes de redirecionar
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="https://wa.me/"]');
+    if (!a || a.closest('dialog')) return;
+    e.preventDefault();
+    open(a);
+  });
+
+  dialog.querySelector('[data-lead-close]')?.addEventListener('click', close);
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) close(); });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = new FormData(form);
+    const nome = String(d.get('nome') ?? '').trim();
+    const telefone = String(d.get('telefone') ?? '');
+    const email = String(d.get('email') ?? '').trim();
+    const digits = telefone.replace(/\D/g, '');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    const problems: Record<string, boolean> = { nome: nome.length < 3, telefone: digits.length < 10 || digits.length > 13, email: !emailOk };
+    Object.entries(problems).forEach(([name, bad]) => form.elements.namedItem(name)?.setAttribute('aria-invalid', String(bad)));
+    if (Object.values(problems).some(Boolean)) {
+      errorBox.textContent = 'Confira nome, telefone (com DDD) e e-mail.';
+      errorBox.hidden = false;
+      form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+      return;
+    }
+    openWhatsApp(diagnosticMessage({ nome, telefone, email }));
+    form.reset();
+    close();
+  });
+</script>

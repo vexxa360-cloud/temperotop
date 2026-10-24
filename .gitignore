@@ -4,3 +4,4 @@ backend/.env
 backend/data/
 .DS_Store
 *.log
+nkglobal-site.zip

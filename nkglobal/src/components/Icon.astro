@@ -1,0 +1,9 @@
+---
+interface Props { name: string; size?: number; label?: string }
+const { name, size = 24, label } = Astro.props;
+const icons = import.meta.glob('../icons/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const raw = icons[`../icons/${name}.svg`];
+if (!raw) throw new Error(`Ícone não encontrado: ${name}`);
+const inner = raw.replace(/<!--.*?-->/s, '').replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+---
+<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'} focusable="false" set:html={inner} />

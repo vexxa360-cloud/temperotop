@@ -1,0 +1,31 @@
+---
+import Button from './Button.astro';
+import { whatsappLink, WHATSAPP_MESSAGES } from '../config/site';
+interface Props { id: string; phonePlaceholder: string; submit: string; variant: 'gold' | 'whatsapp'; icon?: string }
+const { id, phonePlaceholder, submit, variant } = Astro.props;
+---
+<form class="dform" data-whatsapp-form action={whatsappLink(WHATSAPP_MESSAGES.diagnostic)} method="get" target="_blank">
+  <div class="dform__field">
+    <label for={`${id}-nome`}>Nome Completo</label>
+    <input id={`${id}-nome`} name="nome" type="text" autocomplete="name" placeholder="Seu nome" required />
+  </div>
+  <div class="dform__field">
+    <label for={`${id}-tel`}>Telefone</label>
+    <input id={`${id}-tel`} name="telefone" type="tel" autocomplete="tel" inputmode="tel" placeholder={phonePlaceholder} required />
+  </div>
+  <div class="dform__field">
+    <label for={`${id}-email`}>E-mail Corporativo</label>
+    <input id={`${id}-email`} name="email" type="email" autocomplete="email" placeholder="seu@email.com" required />
+  </div>
+  <Button type="submit" variant={variant} class="dform__submit"><slot name="icon" />{submit}<slot name="after" /></Button>
+  <slot />
+</form>
+<style>
+  .dform { display: grid; gap: 1.1rem; }
+  .dform__field { display: grid; gap: .45rem; }
+  label { font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+  input { font: inherit; font-size: .9rem; color: var(--ink); background: var(--sand); border: 1px solid #e4dfd6; border-radius: 4px; padding: .9rem 1rem; min-height: 48px; width: 100%; transition: border-color .2s, box-shadow .2s, background .2s; }
+  input::placeholder { color: #8d8d95; }
+  input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(168,153,104,.25); background: #fff; }
+  .dform :global(.dform__submit) { width: 100%; margin-top: .4rem; }
+</style>

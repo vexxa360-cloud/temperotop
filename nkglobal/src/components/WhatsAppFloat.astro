@@ -1,0 +1,12 @@
+---
+import Icon from './Icon.astro';
+import { whatsappLink, WHATSAPP_MESSAGES } from '../config/site';
+---
+<a class="wa-float" href={whatsappLink(WHATSAPP_MESSAGES.info)} target="_blank" rel="noopener noreferrer" aria-label="Falar pelo WhatsApp">
+  <Icon name="message-circle" size={26} />
+</a>
+<style>
+  .wa-float { position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--whatsapp); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.28); transition: transform .25s, box-shadow .25s; }
+  .wa-float:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 10px 22px rgba(0,0,0,.34); }
+  @media (max-width: 720px) { .wa-float { right: 14px; bottom: 14px; } }
+</style>

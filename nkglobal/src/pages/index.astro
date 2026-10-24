@@ -1,0 +1,198 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import DiagnosticForm from '../components/DiagnosticForm.astro';
+import skyline from '../assets/hero-skyline.webp';
+import clouds from '../assets/clouds.webp';
+import seal from '../assets/seal.png';
+import { hero, certificate, expertise, testimonials, authority, contact } from '../content/home';
+---
+<Layout
+  path="/"
+  title="NK Global Services | Gestão de Facilities para Negócios de Alta Performance"
+  description="Excelência em negócios e governança para ativos de alto padrão. Alto padrão, controle absoluto e continuidade de negócios. Solicite uma proposta."
+>
+  <section class="hero" id="inicio">
+    <Image src={skyline} alt={hero.imageAlt} class="hero__img" widths={[768, 1280, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="hero__veil"></div>
+    <div class="hero__content container">
+      <p class="eyebrow">{hero.eyebrow}</p>
+      <h1>{hero.title[0]}<br />{hero.title[1]}</h1>
+      <p class="hero__text">{hero.text}</p>
+      <Button whatsapp="quote" variant="gold">{hero.cta}</Button>
+    </div>
+  </section>
+
+  <section class="certificate" id="certificado">
+    <Image src={clouds} alt="" class="certificate__bg" widths={[800, 1600]} sizes="100vw" loading="lazy" />
+    <article class="certificate__paper" data-reveal>
+      <h2>{certificate.title}</h2>
+      <p class="certificate__protocol">{certificate.protocol}</p>
+      {certificate.paragraphs.map((p) => <p class="certificate__p" set:html={p} />)}
+      <div class="certificate__foot">
+        <Image src={seal} alt={certificate.sealAlt} class="certificate__seal" width={120} loading="lazy" />
+        <div class="certificate__sign">
+          <p>{certificate.signature}</p>
+          <small>{certificate.signatureCaption}</small>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="expertise" id="expertise">
+    <div class="container">
+      <header class="section-head" data-reveal>
+        <p class="eyebrow">{expertise.eyebrow}</p>
+        <h2>{expertise.title}</h2>
+      </header>
+      <ul class="expertise__grid">
+        {expertise.items.map((it, i) => (
+          <li class="expertise__card" data-reveal style={`--d:${(i % 3) * 0.08}s`}>
+            <span class="icon-badge"><Icon name={it.icon} size={20} /></span>
+            <h3>{it.title}</h3>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="voices" aria-label="Depoimentos de clientes">
+    <div class="voices__track">
+      {[0, 1].map((n) => (
+        <ul class="voices__row" aria-hidden={n === 1 ? 'true' : undefined}>
+          {testimonials.map((t) => (
+            <li><blockquote>“{t.quote}”</blockquote><cite>— {t.author}</cite></li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  </section>
+
+  <section class="authority" id="autoridade">
+    <div class="container">
+      <header class="section-head" data-reveal>
+        <h2>{authority.title}</h2>
+        <p class="section-head__sub">{authority.subtitle}</p>
+      </header>
+      <ul class="authority__grid">
+        {authority.items.map((it, i) => (
+          <li class="authority__card" data-reveal style={`--d:${i * 0.08}s`}>
+            <Icon name={it.icon} size={22} />
+            <h3>{it.title}</h3>
+            <p>{it.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="contact" id="contato">
+    <div class="contact__card container" data-reveal>
+      <div class="contact__intro">
+        <div>
+          <p class="eyebrow">{contact.eyebrow}</p>
+          <h2>Inicie a<br />Transformação</h2>
+          <p class="contact__text">{contact.text}</p>
+        </div>
+        <ul class="contact__places">{contact.places.map((p) => <li>{p}</li>)}</ul>
+      </div>
+      <div class="contact__form">
+        <DiagnosticForm id="home" phonePlaceholder="(XX) XXXXX-XXXX" submit={contact.submit} variant="gold">
+          <Icon slot="after" name="arrow-right" size={16} />
+        </DiagnosticForm>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .section-head { text-align: center; margin-bottom: 3rem; }
+  .section-head h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); margin-top: .8rem; }
+  .section-head__sub { margin-top: .8rem; font-size: .95rem; }
+
+  /* Hero */
+  .hero { position: relative; min-height: min(100svh, 860px); display: grid; align-items: end; color: #fff; overflow: hidden; background: var(--ink); }
+  .hero :global(.hero__img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+  .hero__veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,11,.55) 0%, rgba(10,10,11,.1) 35%, rgba(10,10,11,.55) 75%, #1c1c1d 100%); }
+  .hero__content { position: relative; padding-block: calc(var(--header-h) + 3rem) 5rem; display: grid; gap: 1.2rem; justify-items: start; max-width: var(--container); animation: rise 1s ease both; }
+  .hero__content .eyebrow { color: var(--gold-bright); opacity: 1; }
+  .hero h1 { font-size: clamp(2rem, 5.4vw, 4rem); max-width: 24ch; }
+  .hero__text { font-size: clamp(1rem, 1.6vw, 1.15rem); color: #e6e3dc; max-width: 46ch; margin-bottom: .6rem; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  /* Certificado */
+  .certificate { position: relative; padding: clamp(4rem, 9vw, 7rem) var(--gutter); background: #ebe6db; overflow: hidden; }
+  .certificate :global(.certificate__bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .12; filter: grayscale(1); }
+  .certificate__paper { position: relative; max-width: 560px; margin-inline: auto; background: var(--paper); padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 3.5rem) 2.2rem; box-shadow: 0 30px 60px rgba(40,34,20,.22), 0 0 0 8px var(--paper), inset 0 0 0 1px #ddd7c8; outline: 1px solid #ddd7c8; outline-offset: -14px; }
+  .certificate h2 { font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; font-size: clamp(1.25rem, 3.4vw, 1.6rem); text-align: center; }
+  .certificate h2::after { content: ''; display: block; width: 60px; height: 1px; background: var(--gold); margin: .8rem auto 0; }
+  .certificate__protocol { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; text-align: center; color: #9a9a9a; margin: .8rem 0 2rem; }
+  .certificate__p { font-family: var(--font-mono); font-size: .8rem; line-height: 1.85; color: #4a4a4a; text-align: justify; margin-bottom: 1.2rem; }
+  .certificate__p :global(strong) { color: #1d1d1d; border-bottom: 1px solid rgba(168,153,104,.55); }
+  .certificate__foot { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 2rem; gap: 1rem; }
+  .certificate :global(.certificate__seal) { width: 84px; height: auto; opacity: .55; }
+  .certificate__sign { text-align: right; }
+  .certificate__sign p { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; border-bottom: 1px solid #ddd7c8; padding-bottom: .35rem; }
+  .certificate__sign small { display: block; margin-top: .5rem; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: #9a9a9a; }
+
+  /* Expertise */
+  .expertise { background: var(--ink); color: #fff; padding-block: clamp(4rem, 8vw, 6.5rem); }
+  .expertise__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+  .expertise__card { min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 2rem 1.5rem; text-align: center; background: var(--panel); border: 1px solid #222224; border-radius: 6px; transition: border-color .3s, transform .3s, background .3s; }
+  .expertise__card:hover { border-color: rgba(168,153,104,.5); background: #19191b; transform: translateY(-3px); }
+  .expertise__card h3 { font-weight: 400; font-size: 1.05rem; max-width: 22ch; }
+  .icon-badge { width: 40px; height: 40px; border-radius: 50%; background: #222224; display: grid; place-items: center; color: var(--text-light); transition: color .3s; }
+  .expertise__card:hover .icon-badge { color: var(--gold); }
+
+  /* Depoimentos */
+  .voices { background: #f2ede5; overflow: hidden; padding-block: 1.8rem; }
+  .voices__track { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+  .voices:hover .voices__track { animation-play-state: paused; }
+  .voices__row { display: flex; gap: 4rem; list-style: none; margin: 0; padding: 0 2rem; flex: none; }
+  .voices__row li { display: flex; align-items: baseline; gap: .9rem; white-space: nowrap; }
+  blockquote { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: clamp(1.25rem, 2.4vw, 1.6rem); color: #4b4b4b; }
+  cite { font-style: normal; font-size: .6rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .voices__track { animation: none; width: auto; flex-direction: column; padding-inline: var(--gutter); }
+    .voices__row[aria-hidden='true'] { display: none; }
+    .voices__row { flex-wrap: wrap; gap: 1rem 3rem; padding: 0; }
+    .voices__row li { white-space: normal; flex-wrap: wrap; }
+  }
+
+  /* Autoridade */
+  .authority { background: var(--charcoal); color: #fff; padding-block: clamp(4rem, 8vw, 6.5rem); }
+  .authority .section-head__sub { color: var(--text-light); }
+  .authority__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+  .authority__card { padding: 1.8rem 1.6rem 2rem; background: var(--charcoal-soft); border: 1px solid #454545; border-radius: 4px; color: var(--gold); transition: transform .3s, border-color .3s; }
+  .authority__card:hover { transform: translateY(-3px); border-color: rgba(168,153,104,.6); }
+  .authority__card h3 { font-family: var(--font-serif); font-weight: 600; font-size: 1.3rem; color: #fff; margin: 1rem 0 .8rem; }
+  .authority__card p { border-left: 2px solid rgba(168,153,104,.4); padding-left: .9rem; font-size: .8rem; color: var(--text-light); line-height: 1.7; }
+
+  /* Contato */
+  .contact { padding: clamp(4rem, 8vw, 6.5rem) 0; background: var(--sand); }
+  .contact__card { display: grid; grid-template-columns: 1fr 1.15fr; max-width: 920px; border-radius: 14px; overflow: hidden; box-shadow: 0 30px 60px rgba(30,25,15,.2); background: #fff; }
+  .contact__intro { background: var(--charcoal); color: #fff; padding: 2.6rem 2.2rem; display: flex; flex-direction: column; justify-content: space-between; gap: 3rem; }
+  .contact__intro h2 { font-size: clamp(1.7rem, 3.4vw, 2.1rem); margin: .8rem 0 1rem; }
+  .contact__text { font-size: .82rem; color: var(--text-light); max-width: 30ch; line-height: 1.7; }
+  .contact__places { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: #8a8a8a; }
+  .contact__form { padding: 2.2rem; background: #fff; }
+
+  @media (max-width: 900px) {
+    .expertise__grid, .authority__grid { grid-template-columns: repeat(2, 1fr); }
+    .authority__grid { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; }
+  }
+  @media (max-width: 720px) {
+    .hero { min-height: 88svh; }
+    .hero__content { padding-bottom: 3.5rem; }
+    .expertise__grid { grid-template-columns: 1fr; }
+    .expertise__card { min-height: 150px; }
+    .contact__card { grid-template-columns: 1fr; }
+    .contact__intro { padding: 2rem 1.5rem; gap: 2rem; }
+    .contact__form { padding: 1.6rem 1.4rem; }
+    .certificate__foot { flex-direction: column-reverse; align-items: center; }
+    .certificate__sign { text-align: center; }
+  }
+</style>
