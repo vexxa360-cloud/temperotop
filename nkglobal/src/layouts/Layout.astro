@@ -10,6 +10,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import LeadModal from '../components/LeadModal.astro';
 
 interface Props { title: string; description: string; path: string }
 const { title, description, path } = Astro.props;
@@ -43,8 +44,9 @@ const abs = (p: string) => (base ? new URL(p, base).href : p);
     <main id="conteudo"><slot /></main>
     <Footer />
     <WhatsAppFloat />
+    <LeadModal />
     <script>
-      import { whatsappLink, WHATSAPP_MESSAGES } from '../config/site';
+      import { diagnosticMessage, openWhatsApp } from '../config/site';
 
       // Entrada suave dos elementos marcados com data-reveal
       const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
@@ -59,15 +61,13 @@ const abs = (p: string) => (base ? new URL(p, base).href : p);
         items.forEach((el) => el.classList.add('is-visible'));
       }
 
-      // Formulários: enviam os dados preenchidos para o WhatsApp oficial
+      // Formulários da página: enviam os dados preenchidos para o WhatsApp oficial
       document.querySelectorAll<HTMLFormElement>('form[data-whatsapp-form]').forEach((form) => {
         form.addEventListener('submit', (ev) => {
           ev.preventDefault();
           if (!form.reportValidity()) return;
           const d = new FormData(form);
-          const msg = `${WHATSAPP_MESSAGES.diagnostic}\nNome: ${d.get('nome')}\nTelefone: ${d.get('telefone')}\nE-mail: ${d.get('email')}`;
-          const win = window.open(whatsappLink(msg), '_blank', 'noopener,noreferrer');
-          if (!win) window.location.href = whatsappLink(msg);
+          openWhatsApp(diagnosticMessage({ nome: String(d.get('nome')), telefone: String(d.get('telefone')), email: String(d.get('email')) }));
         });
       });
     </script>

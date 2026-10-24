@@ -13,6 +13,21 @@ export function whatsappLink(message: string = WHATSAPP_MESSAGES.contact): strin
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+export function openWhatsApp(message: string): void {
+  const url = whatsappLink(message);
+  const win = window.open(url, '_blank');
+  if (win) win.opener = null;
+  else window.location.href = url;
+}
+
+export interface LeadData { nome: string; telefone: string; email: string }
+
+/** Mensagem enviada ao WhatsApp da empresa a partir do pop-up/formulários. */
+export function diagnosticMessage({ nome, telefone, email }: LeadData): string {
+  const phone = telefone.replace(/\D/g, '');
+  return `Olá, meu nome é ${nome.trim().toUpperCase()}. Gostaria de solicitar um diagnóstico estratégico de operações e alta performance, com foco em excelência e evolução dos processos. Contato: Telefone: ${phone} E-mail: ${email.trim()}`;
+}
+
 export const SITE = {
   name: 'NK Global Services',
   shortName: 'NK GLOBAL',
