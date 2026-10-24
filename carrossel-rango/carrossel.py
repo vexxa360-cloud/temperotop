@@ -135,6 +135,15 @@ class FotoLayer:
         k = base_w/im.width; im = im.resize((base_w, int(im.height*k)), Image.LANCZOS)
         self.w, self.h = im.size; self.img = im.resize((self.w*S, self.h*S), Image.LANCZOS)
 
+def foto_card(path, w=960, h=560, radius=34):
+    """foto real em cartao arredondado (cobre w x h, recorte centralizado), em escala S."""
+    im = Image.open(path).convert('RGB'); k = max(w/im.width, h/im.height)
+    im = im.resize((int(im.width*k*S), int(im.height*k*S)), Image.LANCZOS)
+    l, t = (im.width-w*S)//2, int((im.height-h*S)*0.40); im = im.crop((l, t, l+w*S, t+h*S)).convert('RGBA')
+    m = Image.new('L', im.size, 0); ImageDraw.Draw(m).rounded_rectangle([0, 0, im.width-1, im.height-1], radius*S, fill=255); im.putalpha(m)
+    class L_: pass
+    o = L_(); o.img, o.w, o.h = im, w, h; return o
+
 def place(c, layer, top, bottom):
     """encaixa a camada de ilustracao (RGBA, em escala S) centralizada entre top e bottom, sem ampliar."""
     im = layer.img; w, h = layer.w, layer.h; k = min(1.0, (bottom-top)/h, 960/w)
@@ -203,8 +212,8 @@ def slide4():
 def slide5():
     apoio = 'Mais organização para acompanhar os pedidos, mais clareza para a equipe e mais tempo para cuidar do seu negócio.'
     c, tb, bt = base_slide(5, BLUE, ['VOCÊ NÃO PRECISA', 'SE DESDOBRAR PARA', 'ATENDER BEM.'], 112, apoio)
-    foto = os.path.join(HERE, 'assets', 'cena_equipe.png')
-    if os.path.exists(foto): place(c, FotoLayer(foto, 1000, 0.66), tb+40, bt-20); return c.out()
+    foto = os.path.join(HERE, 'assets', 'foto_atendente.png')
+    if os.path.exists(foto): place(c, foto_card(foto, 960, 540), tb+30, bt-44); return c.out()
     L = C(None, (1080, 560), True); by = 530
     L.rr([60, by-6, W-60, by+30], 18, fill=(7, 20, 52, 120))
     person(L, 210, by, 0.95, arms=[(210-90, by-330)], calm=True, shirt=NAVY); tray(L, 210-165, by-345, 150)
