@@ -127,6 +127,14 @@ def notif_card(title, sub, kind, w=470, h=118):
 def tilt(img, deg): return img.rotate(deg, expand=True, resample=Image.BICUBIC)
 
 # ----------------------------------------------------------------- paginas (grade: titulo | ilustracao | texto de apoio | rodape)
+class FotoLayer:
+    """camada a partir de um render PNG (RGBA): recorta a area visivel e deixa so uma faixa do balcao."""
+    def __init__(self, path, base_w=960, crop=1.0):
+        im = Image.open(path).convert('RGBA'); a = np.array(im)[..., 3]; ys, xs = np.where(a > 8)
+        im = im.crop((xs.min(), ys.min(), xs.max()+1, ys.min()+int((ys.max()+1-ys.min())*crop)))
+        k = base_w/im.width; im = im.resize((base_w, int(im.height*k)), Image.LANCZOS)
+        self.w, self.h = im.size; self.img = im.resize((self.w*S, self.h*S), Image.LANCZOS)
+
 def place(c, layer, top, bottom):
     """encaixa a camada de ilustracao (RGBA, em escala S) centralizada entre top e bottom, sem ampliar."""
     im = layer.img; w, h = layer.w, layer.h; k = min(1.0, (bottom-top)/h, 960/w)
@@ -142,6 +150,8 @@ def base_slide(i, bg, titulo, cap=112, apoio=None, logo_w=190):
 def slide1():
     c, tb, bt = base_slide(1, BLUE, ['SEU RESTAURANTE', 'NÃO PRECISA DE', '4 BRAÇOS.'], 124)
     bs = body_bottom(c, 'Salão, delivery, WhatsApp… e você tentando dar conta de tudo?', bottom=tb+150, size=36)
+    foto = os.path.join(HERE, 'assets', 'cena_capa.png')
+    if os.path.exists(foto): place(c, FotoLayer(foto, 1000, 0.94), tb+170, 1225); return c.out()
     L = C(None, (1080, 640), True); cx, by = 540, 610
     L.ell([cx-300, by-18, cx+300, by+26], fill=(7, 20, 52, 90))
     hands = [(cx-310, by-380), (cx-140, by-300), (cx+140, by-300), (cx+310, by-380)]
@@ -193,6 +203,8 @@ def slide4():
 def slide5():
     apoio = 'Mais organização para acompanhar os pedidos, mais clareza para a equipe e mais tempo para cuidar do seu negócio.'
     c, tb, bt = base_slide(5, BLUE, ['VOCÊ NÃO PRECISA', 'SE DESDOBRAR PARA', 'ATENDER BEM.'], 112, apoio)
+    foto = os.path.join(HERE, 'assets', 'cena_equipe.png')
+    if os.path.exists(foto): place(c, FotoLayer(foto, 1000, 0.66), tb+40, bt-20); return c.out()
     L = C(None, (1080, 560), True); by = 530
     L.rr([60, by-6, W-60, by+30], 18, fill=(7, 20, 52, 120))
     person(L, 210, by, 0.95, arms=[(210-90, by-330)], calm=True, shirt=NAVY); tray(L, 210-165, by-345, 150)
