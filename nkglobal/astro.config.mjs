@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
 
-// Defina SITE_URL na Vercel (ex.: https://www.seudominio.com.br) para URLs absolutas em OG/canonical.
+// Domínio oficial (canonical/OG). Pode ser sobrescrito pela variável SITE_URL no build.
 export default defineConfig({
-  site: process.env.SITE_URL || undefined,
+  site: process.env.SITE_URL || 'https://nkglobal.com.br',
   trailingSlash: 'never',
   build: { format: 'file' },
 });
